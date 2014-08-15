@@ -1,0 +1,14 @@
+fatal: bad revision '^'
+fatal: bad revision '^'
+    while executing
+"close $fr_fd"
+    (procedure "_new" line 114)
+    invoked from within
+"_new $path 1 $title"
+    (procedure "::choose_rev::new_unmerged" line 2)
+    invoked from within
+"::choose_rev::new_unmerged $w.rev [mc "Revision To Merge"]"
+    (procedure "merge::dialog" line 30)
+    invoked from within
+"merge::dialog"
+    (menu invoke)
