@@ -33,4 +33,4 @@ root.geometry('300x100')
 app = App(root)
 #app.mainloop()
 # with the main loop commented, you can loop at app
-# app.__dict__ dumps info about app
+app.__dict__ #dumps info about app
