@@ -1,1 +1,4 @@
-Another test document in the Flash drive repo
+Another test document in the Flash drive repo.
+
+Modify it on the main computer.
+
