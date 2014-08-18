@@ -65,8 +65,8 @@ class Board:
             for c in range(r):
                 h = Hole(row=r,col=(c0 +2*c),but=[],state=s)
                 self.holes.append(h)
-                print( 'row:{0} col:{1} state:{2} color:{3}'.format(\
-                    h.row, h.col, h.state, h.get_color()) )
+                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
+                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
                 pass
         
         self.gString = '{0}x{1}'.format(2*size*self.boxSize,\
@@ -78,7 +78,8 @@ class Board:
     def draw(self):
         """ run through the list of holes and draw them in color"""
         #for h in self.holes
-     
+        pass
+        
     def __init__( self, shape, size):
         """ set up a peg board of a given size and shape"""
         self.shape = shape
