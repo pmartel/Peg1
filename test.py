@@ -5,6 +5,9 @@ from tkinter import *
 class App(Frame):
     """build the basic window frame template"""
     but =[]
+    #bavckground colors to cycle through
+    ground = 'red','yellow','green','blue','white','black','brown'
+    
     def __init__(self,master):
         super(App,self).__init__(master)
         self.grid()
@@ -32,5 +35,5 @@ root.title( 'Test window')
 root.geometry('300x100')
 app = App(root)
 #app.mainloop()
-# with the main loop commented, you can loop at app
-app.__dict__ #dumps info about app
+# with the main loop commented, you can look at app
+print(app.__dict__ )#dumps info about app
