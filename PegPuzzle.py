@@ -57,7 +57,7 @@ class Board:
         self.pegsLeft = numHoles-1
         for r in range(size+1):
             c0 = size -r # starting column for row
-            if r>0 : #state of hole
+            if r > 1 : #state of hole
                 s = 'full'
             else:
                 s = 'empty'
