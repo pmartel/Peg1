@@ -26,7 +26,7 @@ class Application(Frame):
 
     def display(self):
         """ event handler for the button"""
-        self.background = "black"
+        self['bg'] = "black"
         #self.fg = "black"
         print('The button in the window was clicked')
 
@@ -35,8 +35,8 @@ class Application(Frame):
         self.buttons.clear()
         for h in board.holes :
             
-            b = Button(self, background = h.get_color(), command = self.display )
-            b.grid(row = h.row, column = h.col, sticky = W)
+            b = Button(self, bg = h.get_color(), command = self.display )
+            b.grid(row = h.row, column = h.col, padx=1,pady=1)
             self.buttons.append(b)
         pass
 
