@@ -28,7 +28,11 @@ class Puzzle(Frame):
         self.label1 = Label(self, text = '{0} Pegs left'.format(\
             int(board.pegsLeft)))
         self.label1.grid(row = 0, column=2*board.size+1, sticky = W)
-        self.draw_board(board)
+        self.draw_board(self.board)
+        size = self.board.size
+        self.clearButton = Button(self, text='Clear',\
+                                  command = self.draw_board(self.board))
+        self.clearButton.grid(row =size,column = 2*size+1)
         #self.button1 = Button(self, text = 'Click me!', command=self.display)
         #self.button1.grid(row = 1, column=0, sticky = W)
 
@@ -43,7 +47,8 @@ class Puzzle(Frame):
         self.buttons.clear()
         for h in board.holes :
             
-            b = Button(self, bg = h.get_color(), command = self.display )
+            b = Button(self, bg = h.get_color(), width =2,\
+                       command = self.display )
             b.grid(row = h.row, column = h.col, padx=1,pady=1)
             self.buttons.append(b)
         pass
@@ -77,7 +82,7 @@ class Board:
                     h.row, h.col, h.state, h.get_color(),len(self.holes)) )
                 pass
         
-        self.gString = '{0}x{1}'.format(2*size*self.boxSize,\
+        self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
 
     def cross(self):
