@@ -5,12 +5,12 @@
 
 from tkinter import *
 
-class Application(Frame):
+class Puzzle(Frame):
     """ build the basic window frame template"""
     buttons = []
 
     def __init__(self,master,board):
-        super(Application,self).__init__(master)
+        super(Puzzle,self).__init__(master)
         self.grid()
         board.master = self # link so board can access App's graphics
         self.buttons = []
@@ -133,7 +133,7 @@ root.title('Peg Puzzle')
 root.geometry('100x300')
 board = Board(shape = 'triangle', size = 6)
 root.geometry(board.gString)
-app = Application(root,board)
+puzzle = Puzzle(root,board)
 #app.mainloop()
     
     
