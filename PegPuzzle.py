@@ -5,16 +5,24 @@
 
 from tkinter import *
 
+# Puzzle has a board, Board has Holes, Holes have Buttons
+# start moving things in that direction
+
 class Puzzle(Frame):
     """ build the basic window frame template"""
     buttons = []
-
-    def __init__(self,master,board):
+    board = []
+    
+    def __init__(self,master):
+        master.title('Peg Puzzle')
+        master.geometry('100x300')
+        self.board = Board(shape = 'triangle', size = 6)
+        master.geometry(self.board.gString)
         super(Puzzle,self).__init__(master)
         self.grid()
-        board.master = self # link so board can access App's graphics
+        self.board.master = self # link so board can access App's graphics
         self.buttons = []
-        self.create_widgets(board)
+        self.create_widgets(self.board)
 
     def create_widgets(self,board):
         self.label1 = Label(self, text = '{0} Pegs left'.format(\
@@ -129,11 +137,7 @@ class Hole:
 # This creates a window
 root = Tk()
 # add a title and size
-root.title('Peg Puzzle')
-root.geometry('100x300')
-board = Board(shape = 'triangle', size = 6)
-root.geometry(board.gString)
-puzzle = Puzzle(root,board)
+puzzle = Puzzle(root)
 #app.mainloop()
     
     
