@@ -10,13 +10,15 @@ from tkinter import *
 
 class Puzzle(Frame):
     """ build the basic window frame template"""
-    buttons = []
     board = []
-    
+    buttons = []
+    shape = 'triangle'
+    size = 6
+
     def __init__(self,root):
         root.title('Peg Puzzle')
         root.geometry('100x300')
-        self.board = Board(shape = 'triangle', size = 6)
+        self.board = Board(shape = self.shape, size = self.size)
         root.geometry(self.board.gString)
         super(Puzzle,self).__init__(root)
         self.grid()
@@ -24,6 +26,9 @@ class Puzzle(Frame):
         self.buttons = []
         self.create_widgets(self.board)
 
+    def clear_board(self):
+        print( 'clear the board')
+        
     def create_widgets(self,board):
         self.label1 = Label(self, text = '{0} Pegs left'.format(\
             int(board.pegsLeft)))
@@ -31,29 +36,43 @@ class Puzzle(Frame):
         self.draw_board(self.board)
         size = self.board.size
         self.clearButton = Button(self, text='Clear',\
-                                  command = self.draw_board(self.board))
+                                  command = self.clear_board)
         self.clearButton.grid(row =size,column = 2*size+1)
         #self.button1 = Button(self, text = 'Click me!', command=self.display)
         #self.button1.grid(row = 1, column=0, sticky = W)
 
-    def display(self):
-        """ event handler for the button"""
-        self['bg'] = "black"
-        #self.fg = "black"
-        print('The button in the window was clicked')
-
     def draw_board(self,board):
         """ erase the board and re-draw it """
+        board.__init__(shape = self.shape, size = self.size)
+        print( 'drawing ',self.shape,' board size ',self.size)
         pass
+    
 
 class Board:
+    boxSize = 20 #constant for size of hole
+    gString = '0x0' #geometry string to pass to Tk
+    holes=[]  #list of holes
+    pegsLeft=[]
     root = []
     shape = ''
     size = 0
-    pegsLeft=[]
-    holes=[]  #list of holes
-    gString = '0x0' #geometry string to pass to Tk
-    boxSize = 20 #constant for size of hole
+
+    def __init__( self, shape, size):
+        """ set up a peg board of a given size and shape"""
+        self.shape = shape
+        self.size = size
+        if shape == 'triangle':
+            self.triangle()
+        elif shape == 'cross':
+            self.cross()
+
+    def cross(self):
+        pass
+
+    def draw(self):
+        """ run through the list of holes and draw them in color"""
+        #for h in self.holes
+        pass
 
     def triangle( self ):
         """sets up or resets a trinangular board"""
@@ -71,36 +90,22 @@ class Board:
             for c in range(r):
                 h = Hole(root,row=r,col=(c0 +2*c),but=[],state=s)
                 self.holes.append(h)
-                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
-                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
+##                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
+##                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
                 pass
         
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
 
-    def cross(self):
-        pass
-
-    def draw(self):
-        """ run through the list of holes and draw them in color"""
-        #for h in self.holes
-        pass
         
-    def __init__( self, shape, size):
-        """ set up a peg board of a given size and shape"""
-        self.shape = shape
-        self.size = size
-        if shape == 'triangle':
-            self.triangle()
-        elif shape == 'cross':
-            self.cross()
-
 class Hole:
+    but = [] #button handle
     col = [] #position of hole on grid
     row = []
+
     state =[] #current and initial state
     initState =[]
-    but = [] #button handle
+    
    # mapping of state into peg color also provides a list of states
     stateMap = { 'empty': 'black', 'full': 'green',
                  'target': 'brown', 'armed': 'red' }
