@@ -62,14 +62,14 @@ class Board:
         numHoles = size*(size-1)/2
         self.pegsLeft = numHoles-1
         for r in range(size+1):
-            c0 = size -r # starting column for row
+            c0 = size -r +1# starting column for row
             if r > 1 : #state of hole
                 s = 'full'
             else:
                 s = 'empty'
                 
             for c in range(r):
-                h = Hole(row=r,col=(c0 +2*c),but=[],state=s)
+                h = Hole(root,row=r,col=(c0 +2*c),but=[],state=s)
                 self.holes.append(h)
                 print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
                     h.row, h.col, h.state, h.get_color(),len(self.holes)) )
@@ -106,13 +106,15 @@ class Hole:
                  'target': 'brown', 'armed': 'red' }
 
 
-    def __init__(self, row, col, but, state):
+    def __init__(self, root,row, col, but, state):
         self.row = row
         self.col = col
-        but
+        #but
         self.state = state
         self.initState = state
-        self.but = but
+        self.but = Button(root, bg = self.get_color(), width =2,\
+                       command = self.setState )
+        self.but.grid(row = row, column = col, padx=1,pady=1)
 
     def reset(self):
         self.state = self.initState
@@ -120,13 +122,22 @@ class Hole:
 
     # the drawing is done in the App
     def draw( self ):
-        self.but.bg = self.stateMap[self.state]
-
+        self.but['bg'] = self.stateMap[self.state]
+ 
     def get_color(self):
         return self.stateMap[self.state]
                   
-    def setState(self, state ):
-        if state in self.stateMap :
+    def setState(self):
+        s = self.state
+        if s in self.stateMap :
+            if s == 'empty':
+                self.state = 'full'
+            elif s == 'full':
+                self.state = 'target'
+            elif s == 'target':
+                self.state = 'armed'
+            elif s == 'armed':
+                self.state = 'empty'
             self.draw()
         else :
             print( 'State '+state+' is not valid')
