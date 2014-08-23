@@ -44,13 +44,6 @@ class Puzzle(Frame):
 
     def draw_board(self,board):
         """ erase the board and re-draw it """
-        self.buttons.clear()
-        for h in board.holes :
-            
-            b = Button(self, bg = h.get_color(), width =2,\
-                       command = self.display )
-            b.grid(row = h.row, column = h.col, padx=1,pady=1)
-            self.buttons.append(b)
         pass
 
 class Board:
