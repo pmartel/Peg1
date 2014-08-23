@@ -13,14 +13,14 @@ class Puzzle(Frame):
     buttons = []
     board = []
     
-    def __init__(self,master):
-        master.title('Peg Puzzle')
-        master.geometry('100x300')
+    def __init__(self,root):
+        root.title('Peg Puzzle')
+        root.geometry('100x300')
         self.board = Board(shape = 'triangle', size = 6)
-        master.geometry(self.board.gString)
-        super(Puzzle,self).__init__(master)
+        root.geometry(self.board.gString)
+        super(Puzzle,self).__init__(root)
         self.grid()
-        self.board.master = self # link so board can access App's graphics
+        self.board.root = self # link so board can access App's graphics
         self.buttons = []
         self.create_widgets(self.board)
 
