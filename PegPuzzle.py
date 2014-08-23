@@ -47,7 +47,7 @@ class Puzzle(Frame):
         pass
 
 class Board:
-    master = []
+    root = []
     shape = ''
     size = 0
     pegsLeft=[]
