@@ -27,12 +27,20 @@ class Puzzle(Frame):
         self.create_widgets(self.board)
 
     def clear_board(self):
-        print( 'clear the board')
+        b = self.board
+        h = b.holes
+        for i in range(len(h)):
+            h[i].state = h[i].initState
+            h[i].draw()
+        b.countPegs()
+        self.labelLeft['text']= '{0} Pegs left'.format(\
+            int(b.pegsLeft))
+
         
     def create_widgets(self,board):
-        self.label1 = Label(self, text = '{0} Pegs left'.format(\
+        self.labelLeft = Label(self, text = '{0} Pegs left'.format(\
             int(board.pegsLeft)))
-        self.label1.grid(row = 0, column=2*board.size+1, sticky = W)
+        self.labelLeft.grid(row = 0, column=2*board.size+1, sticky = W)
         self.draw_board(self.board)
         size = self.board.size
         self.clearButton = Button(self, text='Clear',\
