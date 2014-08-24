@@ -11,7 +11,6 @@ from tkinter import *
 class Puzzle(Frame):
     """ build the basic window frame template"""
     board = []
-    buttons = []
     shape = 'triangle'
     size = 6
 
@@ -23,7 +22,6 @@ class Puzzle(Frame):
         super(Puzzle,self).__init__(root)
         self.grid()
         self.board.root = self # link so board can access App's graphics
-        self.buttons = []
         self.create_widgets(self.board)
 
     def clear_board(self):
@@ -86,13 +84,8 @@ class Board:
     def cross(self):
         pass
 
-    def draw(self):
-        """ run through the list of holes and draw them in color"""
-        #for h in self.holes
-        pass
-
     def triangle( self ):
-        """sets up or resets a trinangular board"""
+        """sets up or resets a triangular board"""
         size = self.size
         self.holes.clear()
         numHoles = size*(size-1)/2
@@ -104,7 +97,7 @@ class Board:
                 s = 'empty'
                 
             for c in range(r):
-                h = Hole(root,row=r,col=(c0 +2*c),but=[],state=s)
+                h = Hole(root,row=r,col=c, drawCol=(c0 +2*c),but=[],state=s)
                 self.holes.append(h)
 ##                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
 ##                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
@@ -113,13 +106,21 @@ class Board:
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
         self.countPegs()
+        
 
         
 class Hole:
     but = [] #button handle
-    col = [] #position of hole on grid
+    #row and col are used for adjacency
+    #row and drawCol are used for drawing position
+    col = []
+    drawCol = []
     row = []
 
+    # these are lists of adjacent holes and holes you can jump to
+    adjacent = []
+    jumpTo = []
+    
     state =[] #current and initial state
     initState =[]
     
@@ -128,21 +129,21 @@ class Hole:
                  'target': 'brown', 'armed': 'red' }
 
 
-    def __init__(self, root,row, col, but, state):
+    def __init__(self, root,row, col, drawCol, but, state):
         self.row = row
         self.col = col
+        self.drawCol = drawCol
         #but
         self.state = state
         self.initState = state
         self.but = Button(root, bg = self.get_color(), width =2,\
                        command = self.setState )
-        self.but.grid(row = row, column = col, padx=1,pady=1)
+        self.but.grid(row = row, column = drawCol, padx=1,pady=1)
 
     def reset(self):
         self.state = self.initState
         self.draw()
 
-    # the drawing is done in the App
     def draw( self ):
         self.but['bg'] = self.stateMap[self.state]
  
@@ -152,13 +153,13 @@ class Hole:
     def setState(self):
         s = self.state
         if s in self.stateMap :
-            if s == 'empty':
+            if s == 'empty' :
                 self.state = 'full'
-            elif s == 'full':
+            elif s == 'full' :
                 self.state = 'target'
-            elif s == 'target':
+            elif s == 'target' :
                 self.state = 'armed'
-            elif s == 'armed':
+            elif s == 'armed' :
                 self.state = 'empty'
             self.draw()
         else :
