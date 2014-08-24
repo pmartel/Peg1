@@ -74,6 +74,15 @@ class Board:
         elif shape == 'cross':
             self.cross()
 
+    def countPegs(self):
+        self.pegsLeft = 0
+        h = self.holes
+        for i in range(len(h)):
+            h[i].state = h[i].initState
+            if h[i].state == 'full':
+                self.pegsLeft += 1
+
+        
     def cross(self):
         pass
 
@@ -87,7 +96,6 @@ class Board:
         size = self.size
         self.holes.clear()
         numHoles = size*(size-1)/2
-        self.pegsLeft = numHoles-1
         for r in range(size+1):
             c0 = size -r +1# starting column for row
             if r > 1 : #state of hole
@@ -104,6 +112,7 @@ class Board:
         
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
+        self.countPegs()
 
         
 class Hole:
