@@ -107,6 +107,38 @@ class Board:
                             2*size*self.boxSize)
         self.countPegs()
         
+        # for the triangular board adjacenct (and jumpTo) is along 3 lines:
+        # 1. ne-sw.  Row +/-1, same Col
+        # 2. nw-se.  Row +/- 1, Col +/-1
+        # 3. e-w. Col +/- 1, same Row
+        h = self.holes
+        for i in range(len(h)):
+            r0 = h[i].row
+            c0 = h[i].col
+            for j in range(len(h)):
+                r1 = h[j].row
+                c1 = h[j].col
+                #line 1
+                if c0 == c1:
+                    if r0 == r1-1 or r0 == r1+1:
+                        self.holes[i].adjacent.append(j)
+                    elif  r0 == r1-2 or r0 == r1+2:
+                        self.holes[i].jumpTo.append(j)
+                #line 3
+                if r0 == r1:
+                    if c0 == c1-1 or c0 == c1+1:
+                        self.holes[i].adjacent.append(j)
+                    elif  c0 == c1-2 or c0 == c1+2:
+                        self.holes[i].jumpTo.append(j)
+                #line 2 adjacent
+                if (r0 == r1+1 and c0 == c1+1) or\
+                   (r0 == r1-1 and c0 == c1-1):
+                        self.holes[i].adjacent.append(j)
+                #line 2 jumpTo
+                if (r0 == r1+2 and c0 == c1+2) or\
+                   (r0 == r1-2 and c0 == c1-2):
+                        self.holes[i].jumpTo.append(j)
+                
 
         
 class Hole:
@@ -116,6 +148,8 @@ class Hole:
     col = []
     drawCol = []
     row = []
+
+    root = []
 
     # these are lists of adjacent holes and holes you can jump to
     adjacent = []
@@ -133,7 +167,7 @@ class Hole:
         self.row = row
         self.col = col
         self.drawCol = drawCol
-        #but
+        self.root = root # a handle to get to the top
         self.state = state
         self.initState = state
         self.but = Button(root, bg = self.get_color(), width =2,\
@@ -150,20 +184,23 @@ class Hole:
     def get_color(self):
         return self.stateMap[self.state]
                   
+    def set_color( self,color ):
+        self.but['bg'] = color
+        
     def setState(self):
-        s = self.state
-        if s in self.stateMap :
-            if s == 'empty' :
-                self.state = 'full'
-            elif s == 'full' :
-                self.state = 'target'
-            elif s == 'target' :
-                self.state = 'armed'
-            elif s == 'armed' :
-                self.state = 'empty'
-            self.draw()
-        else :
-            print( 'State '+state+' is not valid')
+        #testing adjacent and jumpTo
+        print(self.adjacent)
+        h = puzzle.board.holes
+        for a in self.adjacent:
+            print( a,'a')
+            h[a].set_color('yellow')
+        print(self.jumpTo)
+        for j in self.jumpTo:
+            print( j, 'j')
+            h[a].set_color('blue')
+            
+        print(self)
+        print(self.__dict__)
         
 #main program        
 # This creates a window
