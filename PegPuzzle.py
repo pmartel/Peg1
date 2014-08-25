@@ -88,6 +88,7 @@ class Board:
         """sets up or resets a triangular board"""
         size = self.size
         self.holes.clear()
+        self.holes=[]
         numHoles = size*(size-1)/2
         for r in range(size+1):
             c0 = size -r +1# starting column for row
@@ -121,23 +122,23 @@ class Board:
                 #line 1
                 if c0 == c1:
                     if r0 == r1-1 or r0 == r1+1:
-                        self.holes[i].adjacent.append(j)
+                        self.holes[i].addA(j)
                     elif  r0 == r1-2 or r0 == r1+2:
-                        self.holes[i].jumpTo.append(j)
+                        self.holes[i].addJ(j)
                 #line 3
                 if r0 == r1:
                     if c0 == c1-1 or c0 == c1+1:
-                        self.holes[i].adjacent.append(j)
+                        self.holes[i].addA(j)
                     elif  c0 == c1-2 or c0 == c1+2:
-                        self.holes[i].jumpTo.append(j)
+                        self.holes[i].addJ(j)
                 #line 2 adjacent
                 if (r0 == r1+1 and c0 == c1+1) or\
                    (r0 == r1-1 and c0 == c1-1):
-                        self.holes[i].adjacent.append(j)
+                        self.holes[i].addA(j)
                 #line 2 jumpTo
                 if (r0 == r1+2 and c0 == c1+2) or\
                    (r0 == r1-2 and c0 == c1-2):
-                        self.holes[i].jumpTo.append(j)
+                        self.holes[i].addJ(j)
                 
 
         
@@ -173,7 +174,16 @@ class Hole:
         self.but = Button(root, bg = self.get_color(), width =2,\
                        command = self.setState )
         self.but.grid(row = row, column = drawCol, padx=1,pady=1)
+        #initialize the adjacency lists
+        self.adjacent=[]
+        self.jumpTo=[]
 
+    def addA(self, n):
+        self.adjacent.append(n)
+
+    def addJ(self, n):
+        self.jumpTo.append(n)
+        
     def reset(self):
         self.state = self.initState
         self.draw()
@@ -197,7 +207,7 @@ class Hole:
         print(self.jumpTo)
         for j in self.jumpTo:
             print( j, 'j')
-            h[a].set_color('blue')
+            h[j].set_color('blue')
             
         print(self)
         print(self.__dict__)
