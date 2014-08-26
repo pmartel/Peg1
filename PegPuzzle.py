@@ -17,6 +17,7 @@ class Puzzle(Frame):
     def __init__(self,root):
         root.title('Peg Puzzle')
         root.geometry('100x300')
+        #create the board
         self.board = Board(shape = self.shape, size = self.size)
         root.geometry(self.board.gString)
         super(Puzzle,self).__init__(root)
@@ -36,6 +37,7 @@ class Puzzle(Frame):
 
         
     def create_widgets(self,board):
+        """ set up label for peg count and clear button"""
         self.labelLeft = Label(self, text = '{0} Pegs left'.format(\
             int(board.pegsLeft)))
         self.labelLeft.grid(row = 0, column=2*board.size+1, sticky = W)
@@ -44,8 +46,6 @@ class Puzzle(Frame):
         self.clearButton = Button(self, text='Clear',\
                                   command = self.clear_board)
         self.clearButton.grid(row =size,column = 2*size+1)
-        #self.button1 = Button(self, text = 'Click me!', command=self.display)
-        #self.button1.grid(row = 1, column=0, sticky = W)
 
     def draw_board(self,board):
         """ erase the board and re-draw it """
@@ -59,7 +59,7 @@ class Board:
     gString = '0x0' #geometry string to pass to Tk
     holes=[]  #list of holes
     pegsLeft=[]
-    root = []
+    root = [] #  'pointer to Tk object
     shape = ''
     size = 0
 
@@ -73,6 +73,7 @@ class Board:
             self.cross()
 
     def countPegs(self):
+        """ counts the number of pegs left on the board """
         self.pegsLeft = 0
         h = self.holes
         for i in range(len(h)):
@@ -82,6 +83,7 @@ class Board:
 
         
     def cross(self):
+        """sets up or resets a cross-shaped board"""
         pass
 
     def triangle( self ):
@@ -165,9 +167,10 @@ class Hole:
 
 
     def __init__(self, root,row, col, drawCol, but, state):
+        """ set up a hole at a given row column and state"""
         self.row = row
         self.col = col
-        self.drawCol = drawCol
+        self.drawCol = drawCol # column on Tk grid to draw hole
         self.root = root # a handle to get to the top
         self.state = state
         self.initState = state
@@ -189,12 +192,15 @@ class Hole:
         self.draw()
 
     def draw( self ):
+        """ change the color of the hole to match its state """
         self.but['bg'] = self.stateMap[self.state]
  
     def get_color(self):
+        """ get the color of a hole """
         return self.stateMap[self.state]
                   
     def set_color( self,color ):
+        """set the color of a hole (for debug)"""
         self.but['bg'] = color
         
     def setState(self):
