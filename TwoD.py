@@ -12,7 +12,8 @@ class TwoD:
         for r in range(rows):
             rObj.append([])
         for c in range(cols):
-            self.arr.append(rObj)
+            # just having append(rObj) points to one copy
+            self.arr.append(rObj.copy())
 
     def display(self):
         """ print the 2D array with row and column stuff on the outside"""
@@ -29,13 +30,15 @@ class TwoD:
             print()
 
     def seqFill(self):
+        """ debug code """
         n = 0
         for r in range(self.rows):
             for c in range(self.cols):
                 self.arr[c][r] = n
                 n +=1
 
-    
+# this runs if TwoD.py is run stand-alone.
+# it serves as debug code
 if __name__ == '__main__':
     a = TwoD(4,3)
     b = TwoD(3,5)
