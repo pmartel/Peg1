@@ -29,6 +29,14 @@ class TwoD:
                 print( t,v, end='')
             print()
 
+    def get(self, row, col ):
+        """ get a value.  return None if outside of range """
+        if row < 0 or row >= self.rows :
+            return None
+        if col < 0 or col >= self.cols :
+            return None
+        return self.arr[col][row]
+        
     def seqFill(self):
         """ debug code """
         n = 0
@@ -37,6 +45,15 @@ class TwoD:
                 self.arr[c][r] = n
                 n +=1
 
+    def set(self, row, col, val ):
+        """ get a value.  return None if outside of range """
+        if row < 0 or row >= self.rows :
+            return False
+        if col < 0 or col >= self.cols :
+            return False
+        self.arr[col][row] = val
+        return True
+
 # this runs if TwoD.py is run stand-alone.
 # it serves as debug code
 if __name__ == '__main__':
@@ -44,5 +61,13 @@ if __name__ == '__main__':
     b = TwoD(3,5)
     a.seqFill()
     a.display()
+    print()
+    print(a.get(1,2))
+    print(a.get(-1,2))
+    print(a.get(2,3))
+    print(a.set(2,2,-1))
+    print()
+    a.display()
+        
 
     
