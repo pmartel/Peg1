@@ -4,6 +4,7 @@
 # it's called Tkinter
 
 from tkinter import *
+from TwoD import *
 
 # Puzzle has a board, Board has Holes, Holes have Buttons
 # start moving things in that direction
@@ -60,6 +61,9 @@ class Board:
     holes=[]  #list of holes
     pegsLeft=[]
     root = [] #  'pointer to Tk object
+    adjMat = [] # adjacency matrix
+    
+    # copies of the parameters used to build the board
     shape = ''
     size = 0
 
@@ -92,56 +96,66 @@ class Board:
         self.holes.clear()
         self.holes=[]
         numHoles = size*(size-1)/2
-        for r in range(size+1):
-            c0 = size -r +1# starting column for row
-            if r > 1 : #state of hole
+        for r in range(size):
+            c0 = size -r # starting column for row
+            print( r,c0,end='|')
+            if r > 0 : #state of hole
                 s = 'full'
             else:
                 s = 'empty'
                 
-            for c in range(r):
+            for c in range(r+1):
+                print(c, end =' ')
                 h = Hole(root,row=r,col=c, drawCol=(c0 +2*c),but=[],state=s)
                 self.holes.append(h)
 ##                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
 ##                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
                 pass
-        
+            print()
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
         self.countPegs()
+        
         
         # for the triangular board adjacenct (and jumpTo) is along 3 lines:
         # 1. ne-sw.  Row +/-1, same Col
         # 2. nw-se.  Row +/- 1, Col +/-1
         # 3. e-w. Col +/- 1, same Row
+
+        self.adjMat = TwoD(self.size,self.size)
+        
         h = self.holes
         for i in range(len(h)):
             r0 = h[i].row
             c0 = h[i].col
-            for j in range(len(h)):
-                r1 = h[j].row
-                c1 = h[j].col
-                #line 1
-                if c0 == c1:
-                    if r0 == r1-1 or r0 == r1+1:
-                        self.holes[i].addA(j)
-                    elif  r0 == r1-2 or r0 == r1+2:
-                        self.holes[i].addJ(j)
-                #line 3
-                if r0 == r1:
-                    if c0 == c1-1 or c0 == c1+1:
-                        self.holes[i].addA(j)
-                    elif  c0 == c1-2 or c0 == c1+2:
-                        self.holes[i].addJ(j)
-                #line 2 adjacent
-                if (r0 == r1+1 and c0 == c1+1) or\
-                   (r0 == r1-1 and c0 == c1-1):
-                        self.holes[i].addA(j)
-                #line 2 jumpTo
-                if (r0 == r1+2 and c0 == c1+2) or\
-                   (r0 == r1-2 and c0 == c1-2):
-                        self.holes[i].addJ(j)
-                
+            self.adjMat.set(r0,c0,i)
+        self.adjMat.display()
+
+            
+##            for j in range(len(h)):
+##                r1 = h[j].row
+##                c1 = h[j].col
+##                #line 1
+##                if c0 == c1:
+##                    if r0 == r1-1 or r0 == r1+1:
+##                        self.holes[i].addA(j)
+##                    elif  r0 == r1-2 or r0 == r1+2:
+##                        self.holes[i].addJ(j)
+##                #line 3
+##                if r0 == r1:
+##                    if c0 == c1-1 or c0 == c1+1:
+##                        self.holes[i].addA(j)
+##                    elif  c0 == c1-2 or c0 == c1+2:
+##                        self.holes[i].addJ(j)
+##                #line 2 adjacent
+##                if (r0 == r1+1 and c0 == c1+1) or\
+##                   (r0 == r1-1 and c0 == c1-1):
+##                        self.holes[i].addA(j)
+##                #line 2 jumpTo
+##                if (r0 == r1+2 and c0 == c1+2) or\
+##                   (r0 == r1-2 and c0 == c1-2):
+##                        self.holes[i].addJ(j)
+##                
 
         
 class Hole:
@@ -171,7 +185,7 @@ class Hole:
         self.row = row
         self.col = col
         self.drawCol = drawCol # column on Tk grid to draw hole
-        self.root = root # a handle to get to the top
+        self.root = root # a handle to get to the top and tkinter
         self.state = state
         self.initState = state
         self.but = Button(root, bg = self.get_color(), width =2,\
