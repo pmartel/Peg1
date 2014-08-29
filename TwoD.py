@@ -35,7 +35,11 @@ class TwoD:
             return None
         if col < 0 or col >= self.cols :
             return None
-        return self.arr[col][row]
+        ret = self.arr[col][row]
+        if ret == []:  # for the peg puzzle, a [] is out of bounds, so None
+            return None
+        else:
+            return ret
         
     def seqFill(self):
         """ debug code """
