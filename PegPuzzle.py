@@ -117,13 +117,9 @@ class Board:
         self.countPegs()
         
         
-        # for the triangular board adjacenct (and jumpTo) is along 3 lines:
-        # 1. ne-sw.  Row +/-1, same Col
-        # 2. nw-se.  Row +/- 1, Col +/-1
-        # 3. e-w. Col +/- 1, same Row
-
+        # adjMat will be a 2D map with hole numbers at the corresponding
+        # position
         self.adjMat = TwoD(self.size,self.size)
-        
         h = self.holes
         for i in range(len(h)):
             r0 = h[i].row
@@ -131,31 +127,52 @@ class Board:
             self.adjMat.set(r0,c0,i)
         self.adjMat.display()
 
+        # for the triangular board adjacenct (and jumpTo) is along 3 lines:
+        # 1. ne-sw.  Row +/-1, same Col
+        # 2. nw-se.  Row +/- 1, Col +/-1
+        # 3. e-w. Col +/- 1, same Row
             
-##            for j in range(len(h)):
-##                r1 = h[j].row
-##                c1 = h[j].col
-##                #line 1
-##                if c0 == c1:
-##                    if r0 == r1-1 or r0 == r1+1:
-##                        self.holes[i].addA(j)
-##                    elif  r0 == r1-2 or r0 == r1+2:
-##                        self.holes[i].addJ(j)
-##                #line 3
-##                if r0 == r1:
-##                    if c0 == c1-1 or c0 == c1+1:
-##                        self.holes[i].addA(j)
-##                    elif  c0 == c1-2 or c0 == c1+2:
-##                        self.holes[i].addJ(j)
-##                #line 2 adjacent
-##                if (r0 == r1+1 and c0 == c1+1) or\
-##                   (r0 == r1-1 and c0 == c1-1):
-##                        self.holes[i].addA(j)
-##                #line 2 jumpTo
-##                if (r0 == r1+2 and c0 == c1+2) or\
-##                   (r0 == r1-2 and c0 == c1-2):
-##                        self.holes[i].addJ(j)
-##                
+        for j in range(len(h)):
+            r = h[j].row
+            c = h[j].col
+            #line 1
+            a1 = self.adjMat.get(r+1,c)
+            if a1 != None:
+                j1 = self.adjMat.get(r+2,c)
+                if j1 != None:
+                    h[j].addA(a1,j1)
+                    
+            a2 = self.adjMat.get(r-1,c)
+            if a2 != None:
+                j2 = self.adjMat.get(r-2,c)
+                if j2 != None:
+                    h[j].addA(a2,j2)
+            
+            #line 3
+            a1 = self.adjMat.get(r,c+1)
+            if a1 != None:
+                j1 = self.adjMat.get(r,c+2)
+                if j1 != None:
+                    h[j].addA(a1,j1)
+                    
+            a2 = self.adjMat.get(r,c-1)
+            if a2 != None:
+                j2 = self.adjMat.get(r,c-2)
+                if j2 != None:
+                    h[j].addA(a2,j2)
+
+            #line 2
+            a1 = self.adjMat.get(r+1,c+1)
+            if a1 != None:
+                j1 = self.adjMat.get(r+2,c+2)
+                if j1 != None:
+                    h[j].addA(a1,j1)
+                    
+            a2 = self.adjMat.get(r-1,c-1)
+            if a2 != None:
+                j2 = self.adjMat.get(r-2,c-2)
+                if j2 != None:
+                    h[j].addA(a2,j2)
 
         
 class Hole:
@@ -168,9 +185,9 @@ class Hole:
 
     root = []
 
-    # these are lists of adjacent holes and holes you can jump to
-    adjacent = []
-    jumpTo = []
+    # these holds adjacent holes and holes you can jump to
+    adjDict = {}
+
     
     state =[] #current and initial state
     initState =[]
@@ -191,16 +208,12 @@ class Hole:
         self.but = Button(root, bg = self.get_color(), width =2,\
                        command = self.setState )
         self.but.grid(row = row, column = drawCol, padx=1,pady=1)
-        #initialize the adjacency lists
-        self.adjacent=[]
-        self.jumpTo=[]
+        #initialize the adjacency dictionary
+        self.adjDict={}
 
-    def addA(self, n):
-        self.adjacent.append(n)
+    def addA(self, a, j):
+        self.adjDict.update({a:j})
 
-    def addJ(self, n):
-        self.jumpTo.append(n)
-        
     def reset(self):
         self.state = self.initState
         self.draw()
@@ -219,18 +232,13 @@ class Hole:
         
     def setState(self):
         #testing adjacent and jumpTo
-        print(self.adjacent)
+        #print(self.adjDict)
+        
         h = puzzle.board.holes
-        for a in self.adjacent:
-            print( a,'a')
-            h[a].set_color('yellow')
-        print(self.jumpTo)
-        for j in self.jumpTo:
-            print( j, 'j')
-            h[j].set_color('blue')
+        for d in self.adjDict:
+            h[d].set_color('yellow')
+            h[self.adjDict[d]].set_color('blue')
             
-        print(self)
-        print(self.__dict__)
         
 #main program        
 # This creates a window
