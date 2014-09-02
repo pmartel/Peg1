@@ -85,7 +85,22 @@ class Board:
             if h[i].state == 'full':
                 self.pegsLeft += 1
 
-        
+    def any_armed(self):
+        """ determine the (first) hole that is armed (if any) """
+        h = self.holes
+        for i in range(len(h)):
+            if h[i].state == "armed":
+                return i
+        return None
+
+    def normalStates(self):
+        """ get rid of armed and target states """
+        for h in self.holes: # don't need index
+            if h.state != "empty":
+                h.state = 'full'
+            h.draw()
+    
+    ## shapes (called from __init__())   
     def cross(self):
         """sets up or resets a cross-shaped board"""
         pass
@@ -105,13 +120,13 @@ class Board:
                 s = 'empty'
                 
             for c in range(r+1):
-                print(c, end =' ')
-                h = Hole(root,row=r,col=c, drawCol=(c0 +2*c),but=[],state=s)
+##                print(c, end =' ')
+                h = Hole(self, root,row=r,col=c, drawCol=(c0 +2*c),but=[],state=s)
                 self.holes.append(h)
 ##                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
 ##                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
                 pass
-            print()
+##            print()
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
         self.countPegs()
@@ -125,7 +140,7 @@ class Board:
             r0 = h[i].row
             c0 = h[i].col
             self.adjMat.set(r0,c0,i)
-        self.adjMat.display()
+##        self.adjMat.display()
 
         # for the triangular board adjacenct (and jumpTo) is along 3 lines:
         # 1. ne-sw.  Row +/-1, same Col
@@ -183,7 +198,8 @@ class Hole:
     drawCol = []
     row = []
 
-    root = []
+    root = [] # points to Tk for Button
+    board = [] # board associated with hole 
 
     # these holds adjacent holes and holes you can jump to
     adjDict = {}
@@ -197,8 +213,9 @@ class Hole:
                  'target': 'brown', 'armed': 'red' }
 
 
-    def __init__(self, root,row, col, drawCol, but, state):
+    def __init__(self, board,root,row, col, drawCol, but, state):
         """ set up a hole at a given row column and state"""
+        self.board = board
         self.row = row
         self.col = col
         self.drawCol = drawCol # column on Tk grid to draw hole
@@ -206,7 +223,7 @@ class Hole:
         self.state = state
         self.initState = state
         self.but = Button(root, bg = self.get_color(), width =2,\
-                       command = self.setState )
+                       command = self.pressed )
         self.but.grid(row = row, column = drawCol, padx=1,pady=1)
         #initialize the adjacency dictionary
         self.adjDict={}
@@ -230,18 +247,25 @@ class Hole:
         """set the color of a hole (for debug)"""
         self.but['bg'] = color
         
-    def setState(self):
-        #testing adjacent and jumpTo
-        #print(self.adjDict)
+    def pressed(self):
+        """ handle the button being pressed """
+        print( 'pressed({0},{1}) state={2}'.format(self.row,self.col,self.state))
         if self.state == 'full':
             # Only allow one armedhole at a time
+            if self.board.any_armed() == None :
+                self.state = 'armed'
+            else:
+                # some warning?
+                pass
         elif self.state == 'armed':
-##        # for test
-##        h = puzzle.board.holes
-##        for d in self.adjDict:
-##            h[d].set_color('yellow')
-##            h[self.adjDict[d]].set_color('blue')
-            
+            self.state = 'full'
+            self.board.normalStates()
+        elif self.state == 'target':
+            self.state = 'empty'
+            self.board.normalStates()
+            #decrement count
+        # ignore 'empty' - do nothing
+        self.draw()
         
 #main program        
 # This creates a window
