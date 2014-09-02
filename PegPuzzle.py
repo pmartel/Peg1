@@ -233,11 +233,14 @@ class Hole:
     def setState(self):
         #testing adjacent and jumpTo
         #print(self.adjDict)
-        
-        h = puzzle.board.holes
-        for d in self.adjDict:
-            h[d].set_color('yellow')
-            h[self.adjDict[d]].set_color('blue')
+        if self.state == 'full':
+            # Only allow one armedhole at a time
+        elif self.state == 'armed':
+##        # for test
+##        h = puzzle.board.holes
+##        for d in self.adjDict:
+##            h[d].set_color('yellow')
+##            h[self.adjDict[d]].set_color('blue')
             
         
 #main program        
