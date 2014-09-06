@@ -96,9 +96,12 @@ class Board:
     def normalStates(self):
         """ get rid of armed and target states """
         for h in self.holes: # don't need index
-            if h.state != "empty":
+            if h.state == "armed":
                 h.state = 'full'
+            elif h.state == "target":
+                h.state = "empty"
             h.draw()
+        self.countPegs()
     
     ## shapes (called from __init__())   
     def cross(self):
@@ -203,7 +206,8 @@ class Hole:
 
     # these holds adjacent holes and holes you can jump to
     adjDict = {}
-
+    # if I'm a target, this is who is targeting me
+    targeter = []
     
     state =[] #current and initial state
     initState =[]
@@ -227,6 +231,7 @@ class Hole:
         self.but.grid(row = row, column = drawCol, padx=1,pady=1)
         #initialize the adjacency dictionary
         self.adjDict={}
+        self.targeter = {}
 
     def addA(self, a, j):
         self.adjDict.update({a:j})
@@ -243,6 +248,24 @@ class Hole:
         """ get the color of a hole """
         return self.stateMap[self.state]
                   
+    def getTargets(self):
+        """Called when the button is pressed.  creates a dictionary with real
+        targets as the keys and adjacent points as the values returns True if at
+        least 1 target"""
+    
+        h =self.board.holes
+        retVal = False
+        for k in self.adjDict.keys():
+            v = self.adjDict[k]
+            if h[k].state == 'full' and h[v].state == "empty" :
+                h[v].targeter = self
+                h[v].state = "target"
+                h[v].draw()
+                retVal = True
+            else:
+                h[v].targeter = [] # just in case
+        return retVal
+    
     def set_color( self,color ):
         """set the color of a hole (for debug)"""
         self.but['bg'] = color
@@ -253,7 +276,10 @@ class Hole:
         if self.state == 'full':
             # Only allow one armedhole at a time
             if self.board.any_armed() == None :
-                self.state = 'armed'
+                # a hole should only be armed if there is at least one empty target
+                targets = self.getTargets()
+                if targets:
+                    self.state = 'armed'
             else:
                 # some warning?
                 pass
@@ -261,11 +287,25 @@ class Hole:
             self.state = 'full'
             self.board.normalStates()
         elif self.state == 'target':
-            self.state = 'empty'
+            # this is the interesting one.  A jump occurs, the target becomes empty
+            # as does the hole adjacent hole. This hole becomes full
+            self.state = 'full'
+            h = self.board.holes
+            # adjacency is symmetric
+            for k in self.adjDict.keys():
+                v = h[k]
+                print(k,v)
+                if v == self.targeter :
+                    h[v].state = 'empty'
+                    h[k].state = 'empty'
+                    break
+            
             self.board.normalStates()
-            #decrement count
+
         # ignore 'empty' - do nothing
         self.draw()
+
+            
         
 #main program        
 # This creates a window
