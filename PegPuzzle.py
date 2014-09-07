@@ -96,11 +96,13 @@ class Board:
     def normalStates(self):
         """ get rid of armed and target states """
         for h in self.holes: # don't need index
-            if h.state == "armed":
+            s = h.state
+            if s == "armed":
                 h.state = 'full'
-            elif h.state == "target":
+            elif s == "target":
                 h.state = "empty"
             h.draw()
+            print("hole{0} {1} was {2}".format( h.hIndex(), h.state,s))
         self.countPegs()
     
     ## shapes (called from __init__())   
@@ -206,8 +208,9 @@ class Hole:
 
     # these holds adjacent holes and holes you can jump to
     adjDict = {}
-    # if I'm a target, this is who is targeting me
+    # if I'm a target, this is who is targeting me and who's being jumped
     targeter = []
+    jumped =[]
     
     state =[] #current and initial state
     initState =[]
@@ -259,6 +262,7 @@ class Hole:
             v = self.adjDict[k]
             if h[k].state == 'full' and h[v].state == "empty" :
                 h[v].targeter = self
+                h[v].jumped = h[k]
                 h[v].state = "target"
                 h[v].draw()
                 retVal = True
@@ -287,25 +291,29 @@ class Hole:
             self.state = 'full'
             self.board.normalStates()
         elif self.state == 'target':
-            # this is the interesting one.  A jump occurs, the target becomes empty
+            # this is an interesting one.  A jump occurs, the target becomes empty
             # as does the hole adjacent hole. This hole becomes full
+            print( "targeter:{0} jumped:{1}".format(self.targeter.hIndex(),\
+                                                    self.jumped.hIndex()) )
             self.state = 'full'
-            h = self.board.holes
-            # adjacency is symmetric
-            for k in self.adjDict.keys():
-                v = h[k]
-                print(k,v)
-                if v == self.targeter :
-                    h[v].state = 'empty'
-                    h[k].state = 'empty'
-                    break
-            
+            self.targeter.state = 'empty'
+            self.jumped.state = 'empty'
             self.board.normalStates()
 
         # ignore 'empty' - do nothing
         self.draw()
 
+    def hIndex(self):
+        """ find the index of this hole on the board
+        for debug"""
+        h = self.board.holes
+        for i in range(len(h)):
+            if self == h[i]:
+                return i
+        return None # should not happen
             
+
+
         
 #main program        
 # This creates a window
