@@ -102,7 +102,7 @@ class Board:
             elif s == "target":
                 h.state = "empty"
             h.draw()
-            print("hole{0} {1} was {2}".format( h.hIndex(), h.state,s))
+            print("hole{0} {1} was {2}".format( h.index, h.state,s))
         self.countPegs()
     
     ## shapes (called from __init__())   
@@ -126,7 +126,8 @@ class Board:
                 
             for c in range(r+1):
 ##                print(c, end =' ')
-                h = Hole(self, root,row=r,col=c, drawCol=(c0 +2*c),but=[],state=s)
+                h = Hole(self, root,row=r,col=c, drawCol=(c0 +2*c),but=[],\
+                         state=s,index = len(self.holes))
                 self.holes.append(h)
 ##                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
 ##                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
@@ -209,18 +210,23 @@ class Hole:
     # these holds adjacent holes and holes you can jump to
     adjDict = {}
     # if I'm a target, this is who is targeting me and who's being jumped
+    # these wre originally set by h[v].targeter = self, but this puts a copy
+    # of self into targeter, rather than a "pointer" to the original self
+    # using index should get around this
     targeter = []
     jumped =[]
     
     state =[] #current and initial state
     initState =[]
+
+    index = [] # positin of this hole in board.holes
     
    # mapping of state into peg color also provides a list of states
     stateMap = { 'empty': 'black', 'full': 'green',
                  'target': 'brown', 'armed': 'red' }
 
 
-    def __init__(self, board,root,row, col, drawCol, but, state):
+    def __init__(self, board,root,row, col, drawCol, but, state,index):
         """ set up a hole at a given row column and state"""
         self.board = board
         self.row = row
@@ -229,6 +235,7 @@ class Hole:
         self.root = root # a handle to get to the top and tkinter
         self.state = state
         self.initState = state
+        self.index = index
         self.but = Button(root, bg = self.get_color(), width =2,\
                        command = self.pressed )
         self.but.grid(row = row, column = drawCol, padx=1,pady=1)
@@ -261,8 +268,8 @@ class Hole:
         for k in self.adjDict.keys():
             v = self.adjDict[k]
             if h[k].state == 'full' and h[v].state == "empty" :
-                h[v].targeter = self
-                h[v].jumped = h[k]
+                h[v].targeter = self.index
+                h[v].jumped = h[k].index
                 h[v].state = "target"
                 h[v].draw()
                 retVal = True
@@ -293,24 +300,25 @@ class Hole:
         elif self.state == 'target':
             # this is an interesting one.  A jump occurs, the target becomes empty
             # as does the hole adjacent hole. This hole becomes full
-            print( "targeter:{0} jumped:{1}".format(self.targeter.hIndex(),\
-                                                    self.jumped.hIndex()) )
+            print( "targeter:{0} jumped:{1}".format(self.targeter,\
+                                                    self.jumped) )
+            h = self.board.holes
             self.state = 'full'
-            self.targeter.state = 'empty'
-            self.jumped.state = 'empty'
+            h[self.targeter].state = 'empty'
+            h[self.jumped].state = 'empty'
             self.board.normalStates()
 
         # ignore 'empty' - do nothing
         self.draw()
 
-    def hIndex(self):
-        """ find the index of this hole on the board
-        for debug"""
-        h = self.board.holes
-        for i in range(len(h)):
-            if self == h[i]:
-                return i
-        return None # should not happen
+##    def index(self):
+##        """ find the index of this hole on the board
+##        for debug"""
+##        h = self.board.holes
+##        for i in range(len(h)):
+##            if self == h[i]:
+##                return i
+##        return None # should not happen
             
 
 
