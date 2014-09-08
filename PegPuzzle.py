@@ -94,8 +94,16 @@ class Board:
                 return i
         return None
 
+    def dumpHoles(self):
+        """ print list of hole properties """
+        print('hole\tstate')
+        for x in self.holes:
+            print(x.index, x.state)
+
+	
     def normalStates(self):
         """ get rid of armed and target states """
+        self.dumpHoles()
         for h in self.holes: # don't need index
             s = h.state
             if s == "armed":
@@ -202,8 +210,12 @@ class Board:
 #main program        
 # This creates a window
 root = Tk()
-# add a title and size
+# start the puzzle
 puzzle = Puzzle(root)
 #app.mainloop()
+# for debug
+b = puzzle.board
+h=b.holes
+
     
     
