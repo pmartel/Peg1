@@ -9,18 +9,22 @@ from Holes import Hole
 
 # Puzzle has a board, Board has Holes, Holes have Buttons
 # start moving things in that direction
+# it looks like I need to get at puzzle from board so that I can set the count
+# to the label of the clear button. The clear button is part of the puzzle
+# frame. 
 
 class Puzzle(Frame):
     """ build the basic window frame template"""
     board = []
     shape = 'triangle'
     size = 6
-
+    labelLeft = [] # make the labelLeft "public"
+    
     def __init__(self,root):
         root.title('Peg Puzzle')
         root.geometry('100x300')
         #create the board
-        self.board = Board(shape = self.shape, size = self.size)
+        self.board = Board(shape = self.shape, size = self.size, parent=self)
         root.geometry(self.board.gString)
         super(Puzzle,self).__init__(root)
         self.grid()
@@ -37,6 +41,8 @@ class Puzzle(Frame):
         self.labelLeft['text']= '{0} Pegs left'.format(\
             int(b.pegsLeft))
 
+    def fixCount(self,n):
+        self.labelLeft['text']= '{0} Pegs left'.format(int(n))
         
     def create_widgets(self,board):
         """ set up label for peg count and clear button"""
@@ -51,7 +57,8 @@ class Puzzle(Frame):
 
     def draw_board(self,board):
         """ erase the board and re-draw it """
-        board.__init__(shape = self.shape, size = self.size)
+        board.__init__(shape = self.shape, size = self.size,\
+                       parent =self)
         print( 'drawing ',self.shape,' board size ',self.size)
         pass
     
@@ -63,13 +70,14 @@ class Board:
     pegsLeft=[]
     root = [] #  'pointer to Tk object
     adjMat = [] # adjacency matrix
-    
+    parent = [] 
     # copies of the parameters used to build the board
     shape = ''
     size = 0
 
-    def __init__( self, shape, size):
+    def __init__( self, shape, size, parent):
         """ set up a peg board of a given size and shape"""
+        self.parent = parent
         self.shape = shape
         self.size = size
         if shape == 'triangle':
@@ -85,7 +93,8 @@ class Board:
             h[i].state = h[i].initState
             if h[i].state == 'full':
                 self.pegsLeft += 1
-
+##        self.parent.fixCount(int(self.pegsLeft))
+        
     def any_armed(self):
         """ determine the (first) hole that is armed (if any) """
         h = self.holes
@@ -113,6 +122,8 @@ class Board:
             h.draw()
             print("hole{0} {1} was {2}".format( h.index, h.state,s))
         self.countPegs()
+        print( 'counted ', self.pegsLeft,' pegs')
+        self.parent.fixCount(self.pegsLeft)
     
     ## shapes (called from __init__())   
     def cross(self):
