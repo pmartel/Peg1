@@ -91,7 +91,7 @@ class Hole:
         """ handle the button being pressed """
         print( 'pressed({0},{1}) state={2}'.format(self.row,self.col,self.state))
         if self.state == 'full':
-            # Only allow one armedhole at a time
+            # Only allow one armed hole at a time
             if self.board.any_armed() == None :
                 # a hole should only be armed if there is at least one empty target
                 targets = self.getTargets()
@@ -108,8 +108,9 @@ class Hole:
             # as does the hole adjacent hole. This hole becomes full
             print( "targeter:{0} jumped:{1}".format(self.targeter,\
                                                     self.jumped) )
+            self.board.dumpHoles()
             h = self.board.holes
-            self.state = 'full'
+            h[self.index].state = 'full' # trying this...
             h[self.targeter].state = 'empty'
             h[self.jumped].state = 'empty'
             self.board.normalStates()
