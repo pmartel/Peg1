@@ -4,8 +4,8 @@ from tkinter import *
 
 class App(Frame):
     """build the basic window frame template"""
-    but =[]
-    #bavckground colors to cycle through
+    count = 0
+    #background colors to cycle through
     ground = 'red','yellow','green','blue','white','black','brown'
     
     def __init__(self,master):
@@ -14,49 +14,27 @@ class App(Frame):
         self.create_widgets()
         
     def create_widgets(self):
-        self.but.append( LocalBut(self, color='green',i = len(self.but)))
-        self.but[0].b.grid(row=1,column=2,pady=2)
-        self.but.append( LocalBut(self, color='brown',i = len(self.but)))
-        self.but[1].b.grid(row=2,column=1,padx=3,pady=2)
-        
-    def pressed(self):
-        #print( 'button pressed')
-        # this works, try to determine which button see p165 of tkinter.pdf
-        for b in self.but :
-            print(b)
-            print(self)
-            print()
-            pass 
-        pass
+        """ a label that can be written to, and two buttons """
+        self.lab1 = Label(self, text ='count={0}'.format(self.count))
+        self.lab1.grid(row=0,column=0)
+        self.b1 = Button(self,command=self.inc,text='inc')
+        self.b1.grid(row=1,column=0)
+        self.b2 = Button(self,command=self.clear,text='clear')
+        self.b2.grid(row=1,column=2)
 
-class LocalBut():
-    b = []
-    i = []
-    def __init__(self, master, color, i):
-        self.b = Button(master, bg = color,width=2,command= self.push,\
-                        overrelief=RAISED)
-        #self.but.append( Button(self, col='brown',i = len(self.but)))
-        self.i = i
-        print( 'button ',self.i,' color ', self.b['bg'], ' command ',\
-               self.b['command'])
-        
-    def push(self):
-        print( 'button pressed', self)
-        # this works, try to determine which button see p165 of tkinter.pdf
-        print(self.b)
-        print(self.i)
-        print(self)
-        print()
-        bg = self.b['bg']
-        if bg == 'green':
-            self.b['bg'] = 'red'
-        
-        pass
-    
-    
-        
+    def inc(self):
+        self.count +=1
+        self.disp()
+
+    def clear(self):
+        self.count = 0
+        self.disp()
+
+    def disp(self):
+        self.lab1['text'] = 'count={0}'.format(self.count)
+   
+## main routine        
 root = Tk()
-
 root.title( 'Test window')
 root.geometry('300x100')
 app = App(root)
