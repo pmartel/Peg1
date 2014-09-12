@@ -6,9 +6,12 @@ class Counter():
     pass the count to the label defined in App"""
 
     count = 0
+    parent = []
+    depth = 0
     
     def __init__(self, parent):
         self.parent = parent
+        self.depth = parent.depth+1
         tkRoot = parent.tkRoot
         self.b1 = Button(tkRoot,command=self.inc,text='inc')
         self.b1.grid(row=1,column=0)
@@ -24,5 +27,9 @@ class Counter():
         self.disp()
 
     def disp(self):
-        print( self.count)
-        self.parent.lab1['text'] = 'count={0}'.format(self.count)
+        #print( self.count)
+        # get to the top
+        p = self.parent
+        while p.depth > 0:
+            p = p.parent
+        p.lab1['text'] = 'count={0}'.format(self.count)

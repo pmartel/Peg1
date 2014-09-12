@@ -7,6 +7,8 @@ class App(Frame):
     """build the basic window frame template"""
     count = 0
     tkRoot = []
+    depth = 0;  # how far down from the root app
+    
     #background colors to cycle through
     ground = 'red','yellow','green','blue','white','black','brown'
     
@@ -15,17 +17,15 @@ class App(Frame):
         self.grid()
         self.create_widgets()
         self.tkRoot = master
+        self.depth = 0
         self.counter = Counter(self)
         
     def create_widgets(self):
-        """ a label that can be written to, and two buttons """
+        """ a label that can be written to, the two buttons are at a
+         lower level"""
         self.lab1 = Label(self, text ='count={0}'.format(self.count))
         self.lab1.grid(row=0,column=0)
 
-
-##    def disp(self):
-##        self.lab1['text'] = 'count={0}'.format(self.count)
-   
 ## main routine        
 root = Tk()
 root.title( 'Test window')
