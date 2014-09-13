@@ -18,7 +18,7 @@ class Puzzle(Frame):
     board = []
     shape = 'triangle'
     size = 6
-    labelLeft = [] # make the labelLeft "public"
+    countLabel = [] # make the countLabel "public"
     
     def __init__(self,root):
         root.title('Peg Puzzle')
@@ -43,18 +43,22 @@ class Puzzle(Frame):
     def fixCount(self,n):
         s = '{0} Pegs left'.format(int(n))
 #        print( 'setting',s)
-        self.labelLeft['text']= s
+        self.countLabel['text']= s
         
     def create_widgets(self,board):
         """ set up label for peg count and clear button"""
-        self.labelLeft = Label(self, text = '{0} Pegs left'.format(\
+        self.countLabel = Label(self, text = '{0} Pegs left'.format(\
             int(board.pegsLeft)))
-        self.labelLeft.grid(row = 0, column=2*board.size+1, sticky = W)
+        self.countLabel.grid(row = 0, column=2*board.size+1, sticky = W)
         self.draw_board(self.board)
         size = self.board.size
         self.clearButton = Button(self, text='Clear',\
                                   command = self.clear_board)
         self.clearButton.grid(row =size,column = 2*size+1)
+        self.helpButton = Button(self,text='Help')
+        self.helpButton.grid(row =size,column = 2*size+2)
+        self.overLabel = Label(self, text = '')
+        self.overLabel.grid(row = size, column=2*board.size+3, sticky = W)
 
     def draw_board(self,board):
         """ erase the board and re-draw it """
@@ -62,6 +66,13 @@ class Puzzle(Frame):
                        parent =self)
         print( 'drawing ',self.shape,' board size ',self.size)
 
+    def gameOver(self, flag):
+        if not(flag):
+            self.overLabel['text']='Game Over'
+        else:
+            self.overLabel['text']='g'
+        pass
+    
 class Board:
     boxSize = 20 #constant for size of hole
     gString = '0x0' #geometry string to pass to Tk
@@ -100,6 +111,13 @@ class Board:
                 return i
         return None
 
+    def anyTargets(self):
+        """ detrmine if there are any targets remaining on the board"""
+        for h in self.holes:
+            if h.checkTargets():
+                return True
+        return False
+    
     def dumpHoles(self):
         """ print list of hole properties """
         print('hole\tstate')
