@@ -63,6 +63,16 @@ class Hole:
     def get_color(self):
         """ get the color of a hole """
         return self.stateMap[self.state]
+
+    def checkTargets(self):
+        """ check if this cell has any targets """
+        h =self.board.holes
+        if self.state == 'full':
+            for k in self.adjDict.keys():
+                v = self.adjDict[k]
+                if h[k].state == 'full' and h[v].state == "empty" :
+                    return True
+        return False
                   
     def getTargets(self):
         """Called when the button is pressed.  creates a dictionary with real
@@ -111,6 +121,7 @@ class Hole:
             h[self.targeter].state = 'empty'
             h[self.jumped].state = 'empty'
             self.board.normalStates()
+            self.board.parent.gameOver(self.board.anyTargets())
 
         # ignore 'empty' - do nothing
         self.draw()
