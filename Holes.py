@@ -89,7 +89,7 @@ class Hole:
         
     def pressed(self):
         """ handle the button being pressed """
-        print( 'pressed({0},{1}) state={2}'.format(self.row,self.col,self.state))
+#        print( 'pressed({0},{1}) state={2}'.format(self.row,self.col,self.state))
         if self.state == 'full':
             # Only allow one armed hole at a time
             if self.board.any_armed() == None :
@@ -106,9 +106,6 @@ class Hole:
         elif self.state == 'target':
             # this is an interesting one.  A jump occurs, the target becomes empty
             # as does the hole adjacent hole. This hole becomes full
-            print( "targeter:{0} jumped:{1}".format(self.targeter,\
-                                                    self.jumped) )
-            self.board.dumpHoles()
             h = self.board.holes
             h[self.index].state = 'full' # trying this...
             h[self.targeter].state = 'empty'
@@ -118,12 +115,3 @@ class Hole:
         # ignore 'empty' - do nothing
         self.draw()
 
-##    def index(self):
-##        """ find the index of this hole on the board
-##        for debug"""
-##        h = self.board.holes
-##        for i in range(len(h)):
-##            if self == h[i]:
-##                return i
-##        return None # should not happen
- 

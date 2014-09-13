@@ -38,11 +38,12 @@ class Puzzle(Frame):
             h[i].state = h[i].initState
             h[i].draw()
         b.countPegs()
-        self.labelLeft['text']= '{0} Pegs left'.format(\
-            int(b.pegsLeft))
+        self.fixCount(b.pegsLeft)
 
     def fixCount(self,n):
-        self.labelLeft['text']= '{0} Pegs left'.format(int(n))
+        s = '{0} Pegs left'.format(int(n))
+#        print( 'setting',s)
+        self.labelLeft['text']= s
         
     def create_widgets(self,board):
         """ set up label for peg count and clear button"""
@@ -60,8 +61,6 @@ class Puzzle(Frame):
         board.__init__(shape = self.shape, size = self.size,\
                        parent =self)
         print( 'drawing ',self.shape,' board size ',self.size)
-        pass
-    
 
 class Board:
     boxSize = 20 #constant for size of hole
@@ -90,10 +89,8 @@ class Board:
         self.pegsLeft = 0
         h = self.holes
         for i in range(len(h)):
-            h[i].state = h[i].initState
             if h[i].state == 'full':
                 self.pegsLeft += 1
-##        self.parent.fixCount(int(self.pegsLeft))
         
     def any_armed(self):
         """ determine the (first) hole that is armed (if any) """
@@ -112,7 +109,6 @@ class Board:
 	
     def normalStates(self):
         """ get rid of armed and target states """
-        self.dumpHoles()
         for h in self.holes: # don't need index
             s = h.state
             if s == "armed":
@@ -120,9 +116,7 @@ class Board:
             elif s == "target":
                 h.state = "empty"
             h.draw()
-            print("hole{0} {1} was {2}".format( h.index, h.state,s))
         self.countPegs()
-        print( 'counted ', self.pegsLeft,' pegs')
         self.parent.fixCount(self.pegsLeft)
     
     ## shapes (called from __init__())   
@@ -138,21 +132,15 @@ class Board:
         numHoles = size*(size-1)/2
         for r in range(size):
             c0 = size -r # starting column for row
-            print( r,c0,end='|')
             if r > 0 : #state of hole
                 s = 'full'
             else:
                 s = 'empty'
                 
             for c in range(r+1):
-##                print(c, end =' ')
                 h = Hole(self, root,row=r,col=c, drawCol=(c0 +2*c),but=[],\
                          state=s,index = len(self.holes))
                 self.holes.append(h)
-##                print( 'button{4} row:{0} col:{1} state:{2} color:{3}'.format(\
-##                    h.row, h.col, h.state, h.get_color(),len(self.holes)) )
-                pass
-##            print()
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
         self.countPegs()
