@@ -34,6 +34,7 @@ class Hole:
 
     def __init__(self, board,root,row, col, drawCol, but, state,index):
         """ set up a hole at a given row column and state"""
+       # print(len(board.holes),row,col,drawCol)
         self.board = board
         self.row = row
         self.col = col

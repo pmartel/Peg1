@@ -47,18 +47,19 @@ class Puzzle(Frame):
         
     def create_widgets(self,board):
         """ set up label for peg count and clear button"""
-        self.countLabel = Label(self, text = '{0} Pegs left'.format(\
-            int(board.pegsLeft)))
-        self.countLabel.grid(row = 0, column=2*board.size+1, sticky = W)
         self.draw_board(self.board)
         size = self.board.size
+        self.countLabel = Label(self, text = '{0} Pegs left'.format(\
+            int(board.pegsLeft)))
+        #self.countLabel.grid(row = 0, column=self.board.maxDrawCol,sticky = 'E')       
+        self.countLabel.grid(row = 0, column=0,sticky = 'E')       
         self.clearButton = Button(self, text='Clear',\
                                   command = self.clear_board)
-        self.clearButton.grid(row =size,column = 2*size+1)
+#        self.clearButton.grid(row =size,column = 2*size+1)
         self.helpButton = Button(self,text='Help')
-        self.helpButton.grid(row =size,column = 2*size+2)
+#        self.helpButton.grid(row =size,column = 2*size+2)
         self.overLabel = Label(self, text = '')
-        self.overLabel.grid(row = size, column=2*board.size+3, sticky = W)
+#        self.overLabel.grid(row = size, column=2*board.size+3, sticky = W)
 
     def draw_board(self,board):
         """ erase the board and re-draw it """
@@ -84,6 +85,7 @@ class Board:
     # copies of the parameters used to build the board
     shape = ''
     size = 0
+    maxDrawCol = 0
 
     def __init__( self, shape, size, parent):
         """ set up a peg board of a given size and shape"""
@@ -149,16 +151,18 @@ class Board:
         self.holes=[]
         numHoles = size*(size-1)/2
         for r in range(size):
-            c0 = size -r # starting column for row
+            c0 = size -r -1# starting column for row
             if r > 0 : #state of hole
                 s = 'full'
             else:
                 s = 'empty'
                 
             for c in range(r+1):
-                h = Hole(self, root,row=r,col=c, drawCol=(c0 +2*c),but=[],\
+                drawCol=(c0 +2*c)
+                h = Hole(self, root,row=r,col=c, drawCol=drawCol,but=[],\
                          state=s,index = len(self.holes))
                 self.holes.append(h)
+                self.maxDrawCol = max(self.maxDrawCol,drawCol)
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
                             2*size*self.boxSize)
         self.countPegs()
