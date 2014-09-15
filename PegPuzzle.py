@@ -43,7 +43,7 @@ class Puzzle(Frame):
             h[i].draw()
         b.countPegs()
         self.fixCount(b.pegsLeft)
-        self.gameOver(False)
+        self.MovesLeft(True)
 
     def fixCount(self,n):
         s = '{0} Pegs left'.format(int(n))
@@ -72,11 +72,11 @@ class Puzzle(Frame):
 ##        board.__init__(shape = self.shape, size = self.size,\
 ##                       parent =self)
 
-    def gameOver(self, flag):
+    def MovesLeft(self, flag):
         if not(flag):
             self.overLabel['text']='Game Over'
         else:
-            self.overLabel['text']='g'
+            self.overLabel['text']=''
         pass
     
 ## Board class split off into separate file           
