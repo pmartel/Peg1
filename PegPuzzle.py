@@ -13,23 +13,28 @@ from Holes import Hole
 # to the label of the clear button. The clear button is part of the puzzle
 # frame. 
 
+#global root
+
 class Puzzle(Frame):
     """ build the basic window frame template"""
     board = []
     shape = 'triangle'
     size = 6
     countLabel = [] # make the countLabel "public"
-    
-    def __init__(self,root):
+    tk = [] 
+    def __init__(self,tk):
         root.title('Peg Puzzle')
         root.geometry('100x300')
+        self.tk = tk # pointer to Tk
+        print('in Puzzle__init__(',tk,')')
         #create the board
         self.board = Board(shape = self.shape, size = self.size, parent=self)
-        root.geometry(self.board.gString)
-        super(Puzzle,self).__init__(root)
+        tk.geometry(self.board.gString)
+        super(Puzzle,self).__init__(tk)
         self.grid()
-        self.board.root = self # link so board can access App's graphics
+        self.board.tk = self # link so board can access App's graphics
         self.create_widgets(self.board)
+
 
     def clear_board(self):
         b = self.board
@@ -47,25 +52,25 @@ class Puzzle(Frame):
         
     def create_widgets(self,board):
         """ set up label for peg count and clear button"""
-        self.draw_board(self.board)
+        #self.draw_board(self.board)
         size = self.board.size
         self.countLabel = Label(self, text = '{0} Pegs left'.format(\
             int(board.pegsLeft)))
-        #self.countLabel.grid(row = 0, column=self.board.maxDrawCol,sticky = 'E')       
-        self.countLabel.grid(row = 0, column=0,sticky = 'E')       
-        self.clearButton = Button(self, text='Clear',\
+        self.countLabel.grid(row = 0, column=self.board.maxDrawCol-1,\
+                             sticky = 'W')       
+#        self.countLabel.grid(row = 0, column=0,sticky = 'W')       
+        self.clearButton = Button(self.tk, text='Clear',\
                                   command = self.clear_board)
 #        self.clearButton.grid(row =size,column = 2*size+1)
-        self.helpButton = Button(self,text='Help')
+        self.helpButton = Button(self.tk,text='Help')
 #        self.helpButton.grid(row =size,column = 2*size+2)
-        self.overLabel = Label(self, text = '')
+        self.overLabel = Label(self.tk, text = '')
 #        self.overLabel.grid(row = size, column=2*board.size+3, sticky = W)
 
-    def draw_board(self,board):
-        """ erase the board and re-draw it """
-        board.__init__(shape = self.shape, size = self.size,\
-                       parent =self)
-        print( 'drawing ',self.shape,' board size ',self.size)
+##    def draw_board(self,board):
+##        """ erase the board and re-draw it """
+##        board.__init__(shape = self.shape, size = self.size,\
+##                       parent =self)
 
     def gameOver(self, flag):
         if not(flag):
@@ -79,7 +84,7 @@ class Board:
     gString = '0x0' #geometry string to pass to Tk
     holes=[]  #list of holes
     pegsLeft=[]
-    root = [] #  'pointer to Tk object
+    #tk = [] #  'pointer to Tk object
     adjMat = [] # adjacency matrix
     parent = [] 
     # copies of the parameters used to build the board
@@ -92,6 +97,7 @@ class Board:
         self.parent = parent
         self.shape = shape
         self.size = size
+        print( 'drawing ',self.shape,' board size ',self.size)
         if shape == 'triangle':
             self.triangle()
         elif shape == 'cross':
@@ -159,8 +165,8 @@ class Board:
                 
             for c in range(r+1):
                 drawCol=(c0 +2*c)
-                h = Hole(self, root,row=r,col=c, drawCol=drawCol,but=[],\
-                         state=s,index = len(self.holes))
+                h = Hole(self, self.parent.tk, row=r,col=c, drawCol=drawCol,\
+                         but=[], state=s,index = len(self.holes))
                 self.holes.append(h)
                 self.maxDrawCol = max(self.maxDrawCol,drawCol)
         self.gString = '{0}x{1}'.format(4*size*self.boxSize,\
@@ -231,6 +237,7 @@ class Board:
 #main program        
 # This creates a window
 root = Tk()
+print(root)
 # start the puzzle
 puzzle = Puzzle(root)
 #app.mainloop()

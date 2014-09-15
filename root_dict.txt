@@ -1,0 +1,52 @@
+Root dict with just labelCount
+{
+    'children': {
+        '51702096': <tkinter.Button object at 0x0314E950>,
+        '51701808': <tkinter.Button object at 0x0314E830>,
+        '51703344': <tkinter.Button object at 0x0314EE30>,
+        '51702000': <tkinter.Button object at 0x0314E8F0>,
+        '51702960': <tkinter.Button object at 0x0314ECB0>,
+        '51702192': <tkinter.Button object at 0x0314E9B0>,
+        '51702576': <tkinter.Button object at 0x0314EB30>,
+        '51703152': <tkinter.Button object at 0x0314ED70>,
+        '51702672': <tkinter.Button object at 0x0314EB90>,
+        '51702384': <tkinter.Button object at 0x0314EA70>,
+        '51701904': <tkinter.Button object at 0x0314E890>,
+        '51700720': <tkinter.Button object at 0x0314E3F0>,
+        '51703248': <tkinter.Button object at 0x0314EDD0>,
+        '51701424': <__main__.Puzzle object at 0x0314E6B0>,
+        '51702864': <tkinter.Button object at 0x0314EC50>,
+        '51702768': <tkinter.Button object at 0x0314EBF0>,
+        '51702480': <tkinter.Button object at 0x0314EAD0>,
+        '51703440': <tkinter.Button object at 0x0314EE90>,
+        '51701712': <tkinter.Button object at 0x0314E7D0>,
+        '51701584': <tkinter.Button object at 0x0314E750>,
+        '51703056': <tkinter.Button object at 0x0314ED10>,
+        '51702288': <tkinter.Button object at 0x0314EA10>
+        },
+    '_tkloaded': 1,
+    '_tclCommands': ['tkerror', 'exit', '4634344destroy'],
+    'tk': <tkapp object at 0x03146218>,
+    'master': None
+    }"
+puzzle dict
+{
+    'widgetName': 'frame',
+    '_tclCommands': [],
+    'children': {
+        '51703728': <tkinter.Label object at 0x0314EFB0>,
+        '51703600': <tkinter.Label object at 0x0314EF30>,
+        '51703632': <tkinter.Button object at 0x0314EF50>,
+        '51703664': <tkinter.Button object at 0x0314EF70>
+        },
+    'root': <tkinter.Tk object at 0x0313CF10>,
+    'clearButton': <tkinter.Button object at 0x0314EF50>,
+    'master': <tkinter.Tk object at 0x0313CF10>,
+    '_name': '51701424',
+    'board': <__main__.Board object at 0x0314E6D0>,
+    'overLabel': <tkinter.Label object at 0x0314EFB0>,
+    'helpButton': <tkinter.Button object at 0x0314EF70>,
+    'tk': <tkapp object at 0x03146218>,
+    'countLabel': <tkinter.Label object at 0x0314EF30>,
+    '_w': '.51701424'
+    }
