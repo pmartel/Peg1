@@ -56,16 +56,16 @@ class Puzzle(Frame):
         size = self.board.size
         self.countLabel = Label(self, text = '{0} Pegs left'.format(\
             int(board.pegsLeft)))
-        self.countLabel.grid(row = 0, column=self.board.maxDrawCol-1,\
+        self.countLabel.grid(row = 0, column=self.board.maxDrawCol,\
                              sticky = 'W')       
-#        self.countLabel.grid(row = 0, column=0,sticky = 'W')       
-        self.clearButton = Button(self.tk, text='Clear',\
+        #self.countLabel.grid(row = 0, column=0,sticky = 'W')       
+        self.clearButton = Button(self, text='Clear',\
                                   command = self.clear_board)
-#        self.clearButton.grid(row =size,column = 2*size+1)
-        self.helpButton = Button(self.tk,text='Help')
-#        self.helpButton.grid(row =size,column = 2*size+2)
-        self.overLabel = Label(self.tk, text = '')
-#        self.overLabel.grid(row = size, column=2*board.size+3, sticky = W)
+        self.clearButton.grid(row =size+1,column = 0)
+        self.helpButton = Button(self,text='Help')
+        self.helpButton.grid(row =size+1,column = 1)
+        self.overLabel = Label(self, text = '')
+        self.overLabel.grid(row = size+1, column=3, sticky = W)
 
 ##    def draw_board(self,board):
 ##        """ erase the board and re-draw it """
@@ -237,13 +237,20 @@ class Board:
 #main program        
 # This creates a window
 root = Tk()
-print(root)
+
 # start the puzzle
 puzzle = Puzzle(root)
 #app.mainloop()
 # for debug
 b = puzzle.board
 h=b.holes
+print('graphics info')
+print('root',root)
+print('index','hole',sep='\t')
+for i in range(len(h)):
+    print(i,str(h[i].but),sep='\t')
 
-    
-    
+print('countLabel',puzzle.countLabel)
+print('overLabel',puzzle.overLabel)
+print('clearButton',puzzle.clearButton)
+print('helpButton',puzzle.helpButton)
