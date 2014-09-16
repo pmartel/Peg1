@@ -122,7 +122,7 @@ class Hole:
             h[self.targeter].state = 'empty'
             h[self.jumped].state = 'empty'
             self.board.normalStates()
-            self.board.parent.MovesLeft(self.board.anyTargets())
+            self.board.MovesLeft(self.board.anyTargets())
 
         # ignore 'empty' - do nothing
         self.draw()

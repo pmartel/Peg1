@@ -12,7 +12,8 @@ from Board import Board
 # to the label of the clear button. The clear button is part of the puzzle
 # frame. 
 
-#global root
+# it looks like I might have to make the labels and buttons part of the board
+# rather than the puzzle.
 
 class Puzzle(Frame):
     """ build the basic window frame template"""
@@ -32,54 +33,9 @@ class Puzzle(Frame):
         super(Puzzle,self).__init__(tk)
         self.grid()
         self.board.tk = self # link so board can access App's graphics
-        self.create_widgets(self.board)
-
-
-    def clear_board(self):
-        b = self.board
-        h = b.holes
-        for i in range(len(h)):
-            h[i].state = h[i].initState
-            h[i].draw()
-        b.countPegs()
-        self.fixCount(b.pegsLeft)
-        self.MovesLeft(True)
-
-    def fixCount(self,n):
-        s = '{0} Pegs left'.format(int(n))
-#        print( 'setting',s)
-        self.countLabel['text']= s
-        
-    def create_widgets(self,board):
-        """ set up label for peg count and clear button"""
-        #self.draw_board(self.board)
-        size = self.board.size
-        self.countLabel = Label(self, text = '{0} Pegs left'.format(\
-            int(board.pegsLeft)))
-        self.countLabel.grid(row = 0, column=self.board.maxDrawCol,\
-                             sticky = 'W')       
-        #self.countLabel.grid(row = 0, column=0,sticky = 'W')       
-        self.clearButton = Button(self, text='Clear',\
-                                  command = self.clear_board)
-        self.clearButton.grid(row =size+1,column = 0)
-        self.helpButton = Button(self,text='Help')
-        self.helpButton.grid(row =size+1,column = 1)
-        self.overLabel = Label(self, text = '')
-        self.overLabel.grid(row = size+1, column=3, sticky = W)
-
-##    def draw_board(self,board):
-##        """ erase the board and re-draw it """
-##        board.__init__(shape = self.shape, size = self.size,\
-##                       parent =self)
-
-    def MovesLeft(self, flag):
-        if not(flag):
-            self.overLabel['text']='Game Over'
-        else:
-            self.overLabel['text']=''
-        pass
     
-## Board class split off into separate file           
+## Board class split off into separate file which now has the
+##buttons and labels          
 ## Holes class split off into a separate file
 
         
@@ -93,13 +49,11 @@ puzzle = Puzzle(root)
 # for debug
 b = puzzle.board
 h=b.holes
-print('graphics info')
-print('root',root)
-print('index','hole',sep='\t')
-for i in range(len(h)):
-    print(i,str(h[i].but),sep='\t')
-
-print('countLabel',puzzle.countLabel)
-print('overLabel',puzzle.overLabel)
-print('clearButton',puzzle.clearButton)
-print('helpButton',puzzle.helpButton)
+##print('graphics info') print('root',root)
+##print('index','hole',sep='\t') for i in range(len(h)):
+##print(i,str(h[i].but),sep='\t')
+##
+##print('countLabel',b.countLabel)
+##print('overLabel',b.overLabel)
+##print('clearButton',b.clearButton)
+##print('helpButton',b.helpButton)

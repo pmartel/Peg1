@@ -1,4 +1,6 @@
 # the Board class is now a separate file
+from tkinter import *
+
 from Holes import Hole
 from TwoD import *
 
@@ -25,6 +27,31 @@ class Board:
             self.triangle()
         elif shape == 'cross':
             self.cross()
+        self.countLabel = Label(parent.tk, text = '{0} Pegs left'.format(\
+            int(self.pegsLeft)))
+        self.countLabel.grid(row = 0, column=self.maxDrawCol+1, sticky = 'W')       
+        self.overLabel = Label(parent.tk, text = '')
+        self.overLabel.grid(row = 1, column=self.maxDrawCol+1, sticky = W)
+        self.clearButton = Button(parent.tk, text='Clear',\
+                                  command = self.clear_board)
+        self.clearButton.grid(row =3,column = self.maxDrawCol+1)
+        self.helpButton = Button(parent.tk,text='Help')
+        self.helpButton.grid(row =4,column = self.maxDrawCol+1)
+
+    def fixCount(self,n):
+        s = '{0} Pegs left'.format(int(n))
+#        print( 'setting',s)
+        self.countLabel['text']= s
+
+    def clear_board(self):
+
+        h = self.holes
+        for i in range(len(h)):
+            h[i].state = h[i].initState
+            h[i].draw()
+        self.countPegs()
+        self.fixCount(self.pegsLeft)
+        self.MovesLeft(True)
 
     def countPegs(self):
         """ counts the number of pegs left on the board """
@@ -56,6 +83,13 @@ class Board:
             print(x.index, x.state)
 
 	
+    def MovesLeft(self, flag):
+        if not(flag):
+            self.overLabel['text']='Game Over'
+        else:
+            self.overLabel['text']=''
+        pass
+    
     def normalStates(self):
         """ get rid of armed and target states """
         for h in self.holes: # don't need index
@@ -66,7 +100,7 @@ class Board:
                 h.state = "empty"
             h.draw()
         self.countPegs()
-        self.parent.fixCount(self.pegsLeft)
+        self.fixCount(self.pegsLeft)
     
     ## shapes (called from __init__())   
     def cross(self):
