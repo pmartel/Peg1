@@ -26,7 +26,6 @@ class Puzzle(Frame):
         root.title('Peg Puzzle')
         root.geometry('100x300')
         self.tk = tk # pointer to Tk
-        print('in Puzzle__init__(',tk,')')
         #create the board
         self.board = Board(shape = self.shape, size = self.size, parent=self)
         tk.geometry(self.board.gString)

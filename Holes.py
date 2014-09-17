@@ -34,7 +34,6 @@ class Hole:
 
     def __init__(self, board,root,row, col, drawCol, but, state,index):
         """ set up a hole at a given row column and state"""
-        print(len(board.holes),row,col,drawCol,root)
         self.board = board
         self.row = row
         self.col = col
@@ -53,18 +52,6 @@ class Hole:
     def addA(self, a, j):
         self.adjDict.update({a:j})
 
-    def reset(self):
-        self.state = self.initState
-        self.draw()
-
-    def draw( self ):
-        """ change the color of the hole to match its state """
-        self.but['bg'] = self.stateMap[self.state]
- 
-    def get_color(self):
-        """ get the color of a hole """
-        return self.stateMap[self.state]
-
     def checkTargets(self):
         """ check if this cell has any targets """
         h =self.board.holes
@@ -75,6 +62,14 @@ class Hole:
                     return True
         return False
                   
+    def get_color(self):
+        """ get the color of a hole """
+        return self.stateMap[self.state]
+
+    def draw( self ):
+        """ change the color of the hole to match its state """
+        self.but['bg'] = self.stateMap[self.state]
+ 
     def getTargets(self):
         """Called when the button is pressed.  creates a dictionary with real
         targets as the keys and adjacent points as the values returns True if at
@@ -94,10 +89,6 @@ class Hole:
                 h[v].targeter = [] # just in case
         return retVal
     
-    def set_color( self,color ):
-        """set the color of a hole (for debug)"""
-        self.but['bg'] = color
-        
     def pressed(self):
         """ handle the button being pressed """
 #        print( 'pressed({0},{1}) state={2}'.format(self.row,self.col,self.state))
@@ -122,8 +113,16 @@ class Hole:
             h[self.targeter].state = 'empty'
             h[self.jumped].state = 'empty'
             self.board.normalStates()
-            self.board.MovesLeft(self.board.anyTargets())
+            self.board.movesLeft(self.board.anyTargets())
 
         # ignore 'empty' - do nothing
         self.draw()
 
+    def reset(self):
+        self.state = self.initState
+        self.draw()
+
+    def set_color( self,color ):
+        """set the color of a hole (for debug)"""
+        self.but['bg'] = color
+        

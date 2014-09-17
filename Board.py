@@ -38,29 +38,6 @@ class Board:
         self.helpButton = Button(parent.tk,text='Help')
         self.helpButton.grid(row =4,column = self.maxDrawCol+1)
 
-    def fixCount(self,n):
-        s = '{0} Pegs left'.format(int(n))
-#        print( 'setting',s)
-        self.countLabel['text']= s
-
-    def clear_board(self):
-
-        h = self.holes
-        for i in range(len(h)):
-            h[i].state = h[i].initState
-            h[i].draw()
-        self.countPegs()
-        self.fixCount(self.pegsLeft)
-        self.MovesLeft(True)
-
-    def countPegs(self):
-        """ counts the number of pegs left on the board """
-        self.pegsLeft = 0
-        h = self.holes
-        for i in range(len(h)):
-            if h[i].state == 'full':
-                self.pegsLeft += 1
-        
     def any_armed(self):
         """ determine the (first) hole that is armed (if any) """
         h = self.holes
@@ -76,6 +53,24 @@ class Board:
                 return True
         return False
     
+    def clear_board(self):
+
+        h = self.holes
+        for i in range(len(h)):
+            h[i].state = h[i].initState
+            h[i].draw()
+        self.countPegs()
+        self.fixCount(self.pegsLeft)
+        self.movesLeft(True)
+
+    def countPegs(self):
+        """ counts the number of pegs left on the board """
+        self.pegsLeft = 0
+        h = self.holes
+        for i in range(len(h)):
+            if h[i].state == 'full':
+                self.pegsLeft += 1
+        
     def dumpHoles(self):
         """ print list of hole properties """
         print('hole\tstate')
@@ -83,7 +78,11 @@ class Board:
             print(x.index, x.state)
 
 	
-    def MovesLeft(self, flag):
+    def fixCount(self,n):
+        s = '{0} Pegs left'.format(int(n))
+        self.countLabel['text']= s
+
+    def movesLeft(self, flag):
         if not(flag):
             self.overLabel['text']='Game Over'
         else:
@@ -102,6 +101,7 @@ class Board:
         self.countPegs()
         self.fixCount(self.pegsLeft)
     
+
     ## shapes (called from __init__())   
     def cross(self):
         """sets up or resets a cross-shaped board"""
