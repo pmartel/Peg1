@@ -35,7 +35,7 @@ class Board:
         self.clearButton = Button(parent.tk, text='Clear',\
                                   command = self.clear_board)
         self.clearButton.grid(row =3,column = self.maxDrawCol+1)
-        self.helpButton = Button(parent.tk,text='Help')
+        self.helpButton = Button(parent.tk,text='Help', command = self.showHelp )
         self.helpButton.grid(row =4,column = self.maxDrawCol+1)
 
     def any_armed(self):
@@ -84,7 +84,10 @@ class Board:
 
     def movesLeft(self, flag):
         if not(flag):
-            self.overLabel['text']='Game Over'
+            if self.pegsLeft == 1 :
+                self.overLabel['text']='Game Over.  *Congratulations*'
+            else:
+                self.overLabel['text']='Game Over'
         else:
             self.overLabel['text']=''
         pass
@@ -101,7 +104,11 @@ class Board:
         self.countPegs()
         self.fixCount(self.pegsLeft)
     
-
+    def showHelp(self):
+        self.hFrame = Frame()
+        #self.hFrame.title('Help for Peg Puzzle')
+        self.hFrame.grid()
+        
     ## shapes (called from __init__())   
     def cross(self):
         """sets up or resets a cross-shaped board"""
