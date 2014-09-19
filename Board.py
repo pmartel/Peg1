@@ -105,10 +105,30 @@ class Board:
         self.fixCount(self.pegsLeft)
     
     def showHelp(self):
-        self.hFrame = Frame()
-        #self.hFrame.title('Help for Peg Puzzle')
-        self.hFrame.grid()
+        self.hTk = Tk()
+        self.hTk.title('Help for Peg Puzzle')
+        self.hTk.geometry('300x300+500+100')
+        self.hTk.grid()
+        h1= Hole(self, self.hTk, row=0,col=0, drawCol=0,\
+                 but=[], state='full',index = 1)
+        l1=Label(self.hTk, text = ' Full hole')
+        l1.grid(row = 0, column=1, sticky = 'W')
         
+        h2= Hole(self, self.hTk, row=1,col=0, drawCol=0,\
+                 but=[], state='empty',index = 1)
+        l2=Label(self.hTk, text = ' Empty hole')
+        l2.grid(row = 1, column=1, sticky = 'W')
+        
+        h3= Hole(self, self.hTk, row=2,col=0, drawCol=0,\
+                 but=[], state='target',index = 1)
+        l3=Label(self.hTk, text = ' Target hole')
+        l3.grid(row = 2, column=1, sticky = 'W')
+        
+        h4= Hole(self, self.hTk, row=3,col=0, drawCol=0,\
+                 but=[], state='armed',index = 1)
+        l4=Label(self.hTk, text = ' Armed hole')
+        l4.grid(row = 3, column=1, sticky = 'W')
+         
     ## shapes (called from __init__())   
     def cross(self):
         """sets up or resets a cross-shaped board"""
