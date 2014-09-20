@@ -111,7 +111,7 @@ class Board:
         self.hTk.grid()
         h1= Hole(self, self.hTk, row=0,col=0, drawCol=0,\
                  but=[], state='full',index = 1)
-        l1=Label(self.hTk, text = ' Full hole')
+        l1=Label(self.hTk, text = ' Full hole (peg)')
         l1.grid(row = 0, column=1, sticky = 'W')
         
         h2= Hole(self, self.hTk, row=1,col=0, drawCol=0,\
@@ -126,9 +126,15 @@ class Board:
         
         h4= Hole(self, self.hTk, row=3,col=0, drawCol=0,\
                  but=[], state='armed',index = 1)
-        l4=Label(self.hTk, text = ' Armed hole')
+        l4=Label(self.hTk, text = ' Armed hole (peg)')
         l4.grid(row = 3, column=1, sticky = 'W')
-         
+        m1=Message(self.hTk, text=""" The object is to jump a full hole (peg)
+ over another peg into an empty hole.  Click on a peg.  If it can jump, it will
+ become armed and any holes it can jump to will become a target.
+ Click on a target to make the jump or the armed peg to disarm it.
+ The object is to get down to a single peg.""")
+        m1.grid(row=4, column = 1)
+        
     ## shapes (called from __init__())   
     def cross(self):
         """sets up or resets a cross-shaped board"""
