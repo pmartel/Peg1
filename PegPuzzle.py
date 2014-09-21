@@ -22,17 +22,37 @@ class Puzzle(Frame):
     size = 6
     countLabel = [] # make the countLabel "public"
     tk = [] 
+
     def __init__(self,tk):
         root.title('Peg Puzzle')
         root.geometry('100x300')
         self.tk = tk # pointer to Tk
+        self.selectBoard()
         #create the board
         self.board = Board(shape = self.shape, size = self.size, parent=self)
         tk.geometry(self.board.gString)
         super(Puzzle,self).__init__(tk)
         self.grid()
         self.board.tk = self # link so board can access App's graphics
-    
+        
+    def selectBoard(self):
+        selectWin = tkMessageBox();
+##        selectWin.title('Select Board')
+##        selectWin.geometry('300x300+600+200')
+        selectWin.askokcancel(title='enter board parameters')
+        l1 = Label(selectWin,text='Size')
+        l1.grid(row=0,column=0)
+        l3 = Label(selectWin,text='Shape')
+        l3.grid(row=1,column=0)
+##        sizeVar = selectWin.StringVar()
+##        Ent1 = Entry(textVariable=sizeVar)
+        Ent1 = Entry(selectWin)
+        Ent1.grid(row=0,column=1)
+        mB1=Menu(selectWin)
+        #mB1.grid(row=1,column=1)
+        # wait for window to close
+        #selectWin.mainloop()
+
 ## Board class split off into separate file which now has the
 ##buttons and labels          
 ## Holes class split off into a separate file
