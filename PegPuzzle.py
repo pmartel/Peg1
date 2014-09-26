@@ -4,6 +4,7 @@
 # it's called Tkinter
 
 from tkinter import *
+from tkMessageBox import *
 from Board import Board
 
 # Puzzle has a board, Board has Holes, Holes have Buttons
@@ -36,7 +37,8 @@ class Puzzle(Frame):
         self.board.tk = self # link so board can access App's graphics
         
     def selectBoard(self):
-        selectWin = tkMessageBox();
+        # it looks like a messagebox isn't what I want.  Maybe tk.Dialog()
+        selectWin = self.tk.tkMessageBox();
 ##        selectWin.title('Select Board')
 ##        selectWin.geometry('300x300+600+200')
         selectWin.askokcancel(title='enter board parameters')
