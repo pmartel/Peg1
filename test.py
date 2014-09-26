@@ -1,22 +1,17 @@
 # testing
-# GUI using Tkinter
-#from tkinter import *
 
 # New test.  Trying to get message box working
-#!/usr/bin/env python 
-import tkinter as tk
+#Cribbed from http://www.tutorialspoint.com/python/tk_messagebox.htm
+#and converted to run in Python 3.4
+import tkinter
 
-class Application(tk.Frame): 
-    def __init__(self, master=None):
-        tk.Frame.__init__(self, master) 
-        self.grid()
-        self.createWidgets()
-        
-    def createWidgets(self):
-        self.quitButton = tk.Button(self, text='Quit',
-        command=self.quit) 
-        self.quitButton.grid()
-    
-app = Application() 
-app.master.title('Sample application') 
-app.mainloop()
+
+top = tkinter.Tk()
+def hello():
+    tkinter.messagebox.showinfo("Say Hello", "Hello World")
+    pass
+
+B1 = tkinter.Button(top, text = "Say Hello", command = hello)
+B1.pack()
+
+top.mainloop()
