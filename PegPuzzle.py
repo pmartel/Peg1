@@ -4,7 +4,6 @@
 # it's called Tkinter
 
 from tkinter import *
-from tkMessageBox import *
 from Board import Board
 
 # Puzzle has a board, Board has Holes, Holes have Buttons
@@ -25,32 +24,34 @@ class Puzzle(Frame):
     tk = [] 
 
     def __init__(self,tk):
-        root.title('Peg Puzzle')
-        root.geometry('100x300')
+        tk.title('Peg Puzzle')
+        tk.geometry('100x300')
         self.tk = tk # pointer to Tk
-        self.selectBoard()
+        [self.shape, self.size] = self.selectBoard()
         #create the board
         self.board = Board(shape = self.shape, size = self.size, parent=self)
         tk.geometry(self.board.gString)
         super(Puzzle,self).__init__(tk)
+        
         self.grid()
         self.board.tk = self # link so board can access App's graphics
         
     def selectBoard(self):
         # it looks like a messagebox isn't what I want.  Maybe tk.Dialog()
-        selectWin = self.tk.tkMessageBox();
-##        selectWin.title('Select Board')
-##        selectWin.geometry('300x300+600+200')
-        selectWin.askokcancel(title='enter board parameters')
-        l1 = Label(selectWin,text='Size')
+        tk1 = Tk()
+        tk1.title('Select Board')
+        tk1.geometry('100x300')
+        l1 = Label(tk1,text='Size')
         l1.grid(row=0,column=0)
-        l3 = Label(selectWin,text='Shape')
+        l3 = Label(tk1,text='Shape')
         l3.grid(row=1,column=0)
 ##        sizeVar = selectWin.StringVar()
 ##        Ent1 = Entry(textVariable=sizeVar)
-        Ent1 = Entry(selectWin)
+        Ent1 = Entry(tk1)
         Ent1.grid(row=0,column=1)
-        mB1=Menu(selectWin)
+        mB1=Menu(tk1)
+        #input("type something")
+        return ['triangle',7]
         #mB1.grid(row=1,column=1)
         # wait for window to close
         #selectWin.mainloop()
