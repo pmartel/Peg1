@@ -27,7 +27,10 @@ class Puzzle(Frame):
         tk.title('Peg Puzzle')
         tk.geometry('100x300')
         self.tk = tk # pointer to Tk
-        [self.shape, self.size] = self.selectBoard()
+        selectBoard = SelectBoard(Tk())
+        [self.shape,self.size] = selectBoard.waitForClose()
+        
+        #[self.shape, self.size] = self.selectBoard()
         #create the board
         self.board = Board(shape = self.shape, size = self.size, parent=self)
         tk.geometry(self.board.gString)
@@ -35,27 +38,38 @@ class Puzzle(Frame):
         
         self.grid()
         self.board.tk = self # link so board can access App's graphics
-        
-    def selectBoard(self):
+
+class SelectBoard(Frame) :
+    tk1 = []
+    def __init__(self,tk1):
         # it looks like a messagebox isn't what I want.  Maybe tk.Dialog()
-        tk1 = Tk()
+        self.tk1 = tk1
         tk1.title('Select Board')
-        tk1.geometry('100x300')
+        tk1.geometry('300x200+500+200')
         l1 = Label(tk1,text='Size')
         l1.grid(row=0,column=0)
         l3 = Label(tk1,text='Shape')
-        l3.grid(row=1,column=0)
+        l3.grid(row=1,column=0,sticky=N)
 ##        sizeVar = selectWin.StringVar()
 ##        Ent1 = Entry(textVariable=sizeVar)
         Ent1 = Entry(tk1)
         Ent1.grid(row=0,column=1)
-        mB1=Menu(tk1)
-        #input("type something")
-        return ['triangle',7]
-        #mB1.grid(row=1,column=1)
-        # wait for window to close
-        #selectWin.mainloop()
+        lb1=Listbox(tk1,height=4)
+        lb1.insert(END,'triangle')
+        lb1.insert(END,'cross')
+        lb1.grid(row=1,column=1)
+        b1 = Button(tk1, text='Done', command = self.validate)
+        b1.grid(row=2,column=2)
 
+    def validate(self):
+        """ verify that size is a number and shape is ok """
+        #debug
+        pass
+
+    def waitForClose(self):
+        input('type something')
+        return ['triangle', 5]
+    
 ## Board class split off into separate file which now has the
 ##buttons and labels          
 ## Holes class split off into a separate file
