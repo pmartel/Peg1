@@ -22,13 +22,14 @@ class Puzzle(Frame):
     size = 6
     countLabel = [] # make the countLabel "public"
     tk = [] 
-
+    selectBoard = []
     def __init__(self,tk):
         tk.title('Peg Puzzle')
         tk.geometry('100x300')
         self.tk = tk # pointer to Tk
-        selectBoard = SelectBoard(Tk())
-        [self.shape,self.size] = selectBoard.waitForClose()
+        tk1 = Tk()
+        self.selectBoard = SelectBoard(tk1)
+        [self.shape,self.size] = self.selectBoard.waitForClose()
         
         #[self.shape, self.size] = self.selectBoard()
         #create the board
@@ -60,6 +61,8 @@ class SelectBoard(Frame) :
         lb1.grid(row=1,column=1)
         b1 = Button(tk1, text='Done', command = self.validate)
         b1.grid(row=2,column=2)
+        super(SelectBoard,self).__init__(tk1)
+        self.grid()
 
     def validate(self):
         """ verify that size is a number and shape is ok """
@@ -81,6 +84,7 @@ root = Tk()
 
 # start the puzzle
 puzzle = Puzzle(root)
+puzzle.mainloop()
 #app.mainloop()
 # for debug
 b = puzzle.board
