@@ -5,6 +5,7 @@
 
 from tkinter import *
 from Board import Board
+from winsound import *
 
 # Puzzle has a board, Board has Holes, Holes have Buttons
 # start moving things in that direction
@@ -51,10 +52,8 @@ class SelectBoard(Frame) :
         l3.grid(row=1,column=0,sticky=N)
         self.sizeVar = IntVar()
         self.Ent1 = Entry(puz.tk,textvariable=self.sizeVar)
-        #self.Ent1['textvariable']=self.sizeVar
         self.Ent1.grid(row=0,column=1)
         self.listVar=StringVar()
-        #lb1=Listbox(puz.tk,height=4)
         self.lb1=Listbox(puz.tk,height=4,selectmode=SINGLE,
                          listvariable=self.listVar)
         self.lb1.insert(END,'triangle')
@@ -69,9 +68,15 @@ class SelectBoard(Frame) :
         """ verify that size is a number and shape is ok """
         #debug
         s = self.lb1.curselection()
-        l = self.listVar.get()
-        print(s)
-        print(self.sizeVar.get())
+        if len(s) > 0:
+            lstr = self.listVar.get() # string of listVar
+            l = eval(lstr) # evaluates as a tuple
+            print('board type ',l[s[0]])
+        else:
+           print( 'no board type selected')
+           PlaySound('SystemQuestion',MB_ICONEXCLAMATION )
+           
+        print('board size',self.sizeVar.get())
         pass
 
     def waitForClose(self):
@@ -91,8 +96,11 @@ root = Tk()
 puzzle = Puzzle(root)
 #puzzle.mainloop()
 # for debug
-b = puzzle.board
+#b = puzzle.board
 ##h=b.holes
+s = puzzle.selectBoard
+lb = s.lb1
+c = lb.curselection()
 
 ##print('graphics info') print('root',root)
 ##print('index','hole',sep='\t') for i in range(len(h)):
