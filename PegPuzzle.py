@@ -27,46 +27,51 @@ class Puzzle(Frame):
         tk.title('Peg Puzzle')
         tk.geometry('100x300')
         self.tk = tk # pointer to Tk
-        tk1 = Tk()
-        self.selectBoard = SelectBoard(tk1)
-        [self.shape,self.size] = self.selectBoard.waitForClose()
-        
+        self.selectBoard = SelectBoard(self)
+
+      
         #[self.shape, self.size] = self.selectBoard()
-        #create the board
-        self.board = Board(shape = self.shape, size = self.size, parent=self)
-        tk.geometry(self.board.gString)
-        super(Puzzle,self).__init__(tk)
-        
-        self.grid()
-        self.board.tk = self # link so board can access App's graphics
+##        #create the board
+##        self.board = Board(shape = self.shape, size = self.size, parent=self)
+##        tk.geometry(self.board.gString)
+##        super(Puzzle,self).__init__(tk)
+##        
+##        self.grid()
+##        self.board.tk = self # link so board can access App's graphics
 
 class SelectBoard(Frame) :
-    tk1 = []
-    def __init__(self,tk1):
+    def __init__(self,puz):
         # it looks like a messagebox isn't what I want.  Maybe tk.Dialog()
-        self.tk1 = tk1
-        tk1.title('Select Board')
-        tk1.geometry('300x200+500+200')
-        l1 = Label(tk1,text='Size')
+       
+        puz.tk.title('Select Board')
+        puz.tk.geometry('300x200+500+200')
+        l1 = Label(puz.tk,text='Size')
         l1.grid(row=0,column=0)
-        l3 = Label(tk1,text='Shape')
+        l3 = Label(puz.tk,text='Shape')
         l3.grid(row=1,column=0,sticky=N)
-##        sizeVar = selectWin.StringVar()
-##        Ent1 = Entry(textVariable=sizeVar)
-        Ent1 = Entry(tk1)
-        Ent1.grid(row=0,column=1)
-        lb1=Listbox(tk1,height=4)
-        lb1.insert(END,'triangle')
-        lb1.insert(END,'cross')
-        lb1.grid(row=1,column=1)
-        b1 = Button(tk1, text='Done', command = self.validate)
-        b1.grid(row=2,column=2)
-        super(SelectBoard,self).__init__(tk1)
+        self.sizeVar = IntVar()
+        self.Ent1 = Entry(puz.tk,textvariable=self.sizeVar)
+        #self.Ent1['textvariable']=self.sizeVar
+        self.Ent1.grid(row=0,column=1)
+        self.listVar=StringVar()
+        #lb1=Listbox(puz.tk,height=4)
+        self.lb1=Listbox(puz.tk,height=4,selectmode=SINGLE,
+                         listvariable=self.listVar)
+        self.lb1.insert(END,'triangle')
+        self.lb1.insert(END,'cross')
+        self.lb1.grid(row=1,column=1)
+        self.b1 = Button(puz.tk, text='Done', command = self.validate)
+        self.b1.grid(row=2,column=2)
+        super(SelectBoard,self).__init__(puz.tk)
         self.grid()
 
     def validate(self):
         """ verify that size is a number and shape is ok """
         #debug
+        s = self.lb1.curselection()
+        l = self.listVar.get()
+        print(s)
+        print(self.sizeVar.get())
         pass
 
     def waitForClose(self):
@@ -84,11 +89,11 @@ root = Tk()
 
 # start the puzzle
 puzzle = Puzzle(root)
-puzzle.mainloop()
-#app.mainloop()
+#puzzle.mainloop()
 # for debug
 b = puzzle.board
-h=b.holes
+##h=b.holes
+
 ##print('graphics info') print('root',root)
 ##print('index','hole',sep='\t') for i in range(len(h)):
 ##print(i,str(h[i].but),sep='\t')
