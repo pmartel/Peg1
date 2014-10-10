@@ -44,13 +44,14 @@ class SelectBoard(Frame) :
     def __init__(self,puz):
         # it looks like a messagebox isn't what I want.  Maybe tk.Dialog()
        
+        self.puz = puz
         puz.tk.title('Select Board')
         puz.tk.geometry('300x200+500+200')
         l1 = Label(puz.tk,text='Size')
         l1.grid(row=0,column=0)
         l3 = Label(puz.tk,text='Shape')
         l3.grid(row=1,column=0,sticky=N)
-        self.sizeVar = IntVar()
+        self.sizeVar = StringVar()
         self.Ent1 = Entry(puz.tk,textvariable=self.sizeVar)
         self.Ent1.grid(row=0,column=1)
         self.listVar=StringVar()
@@ -64,19 +65,33 @@ class SelectBoard(Frame) :
         super(SelectBoard,self).__init__(puz.tk)
         self.grid()
 
+
     def validate(self):
         """ verify that size is a number and shape is ok """
         #debug
         s = self.lb1.curselection()
+        errNum = 0
         if len(s) > 0:
             lstr = self.listVar.get() # string of listVar
             l = eval(lstr) # evaluates as a tuple
-            print('board type ',l[s[0]])
+            bt = l[s[0]]
+            print('board type ',bt)
+            self.puz.shape = bt
         else:
            print( 'no board type selected')
-           PlaySound('SystemQuestion',MB_ICONEXCLAMATION )
+           MessageBeep(MB_ICONHAND) # "bad" sound in module winsound
+           errNum += 1
            
-        print('board size',self.sizeVar.get())
+        try :
+            s =self.sizeVar.get()
+            n = int(s)
+            print('board size',n)
+            self.puz.size = n
+        except :
+           print( 'bad board size, must be integer')
+           MessageBeep(MB_ICONHAND) # "bad" sound in module winsound
+           errNum += 2
+            
         pass
 
     def waitForClose(self):
