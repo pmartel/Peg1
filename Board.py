@@ -19,6 +19,7 @@ class Board:
 
     def __init__( self, shape, size, parent):
         """ set up a peg board of a given size and shape"""
+        parent.tk.title("Peg Puzzle")
         self.parent = parent
         self.shape = shape
         self.size = size

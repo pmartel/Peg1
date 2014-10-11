@@ -24,12 +24,18 @@ class Puzzle(Frame):
     countLabel = [] # make the countLabel "public"
     tk = [] 
     selectBoard = []
+
     def __init__(self,tk):
         tk.title('Peg Puzzle')
         tk.geometry('100x300')
         self.tk = tk # pointer to Tk
         self.selectBoard = SelectBoard(self)
 
+    def clearBoard(self):
+        c = self.tk.children
+        l = list(c.values())
+        for k in range(len(l)):
+            l[k].destroy()
       
         #[self.shape, self.size] = self.selectBoard()
 ##        #create the board
@@ -42,8 +48,6 @@ class Puzzle(Frame):
 
 class SelectBoard(Frame) :
     def __init__(self,puz):
-        # it looks like a messagebox isn't what I want.  Maybe tk.Dialog()
-       
         self.puz = puz
         puz.tk.title('Select Board')
         puz.tk.geometry('300x200+500+200')
@@ -66,6 +70,7 @@ class SelectBoard(Frame) :
         self.grid()
 
 
+        
     def validate(self):
         """ verify that size is a number and shape is ok """
         #debug
@@ -92,12 +97,12 @@ class SelectBoard(Frame) :
            MessageBeep(MB_ICONHAND) # "bad" sound in module winsound
            errNum += 2
             
-        pass
+        if errNum == 0: # good parameters, run game
+           p = self.puz
+           p.clearBoard()
+           p.board = Board(shape = p.shape, size = p.size, parent=p)
+           p.tk.geometry(p.board.gString)
 
-    def waitForClose(self):
-        input('type something')
-        return ['triangle', 5]
-    
 ## Board class split off into separate file which now has the
 ##buttons and labels          
 ## Holes class split off into a separate file
@@ -113,9 +118,8 @@ puzzle = Puzzle(root)
 # for debug
 #b = puzzle.board
 ##h=b.holes
-s = puzzle.selectBoard
-lb = s.lb1
-c = lb.curselection()
+t = puzzle.tk
+c = t.children
 
 ##print('graphics info') print('root',root)
 ##print('index','hole',sep='\t') for i in range(len(h)):
