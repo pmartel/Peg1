@@ -69,15 +69,15 @@ class SelectBoard(Frame) :
     def validate(self):
         """ verify that size is a number and shape is ok """
         #debug
-        s = self.lb1.curselection()
         errNum = 0
-        if len(s) > 0:
-            lstr = self.listVar.get() # string of listVar
+        s = self.lb1.curselection()
+        lstr = self.listVar.get() # string of listVar
+        try:
             l = eval(lstr) # evaluates as a tuple
-            bt = l[s[0]]
-            print('board type ',bt)
+            bt = l[s[0]] # selects one item from tuple. Exception if s is empty
+            print('board type',bt)
             self.puz.shape = bt
-        else:
+        except:
            print( 'no board type selected')
            MessageBeep(MB_ICONHAND) # "bad" sound in module winsound
            errNum += 1
