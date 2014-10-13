@@ -29,7 +29,7 @@ class Hole:
     
    # mapping of state into peg color also provides a list of states
     stateMap = { 'empty': 'black', 'full': 'green',
-                 'target': 'brown', 'armed': 'red' }
+                 'target': 'brown', 'armed': 'red', 'none': 'grey' }
 
 
     def __init__(self, board,root,row, col, drawCol, but, state,index):
@@ -42,9 +42,13 @@ class Hole:
         self.state = state
         self.initState = state
         self.index = index
-        self.but = Button(root, bg = self.get_color(), width =2,\
-                       command = self.pressed )
-        self.but.grid(row = row, column = drawCol, padx=1,pady=1)
+        if state != 'none':
+            self.but = Button(root, bg = self.get_color(), width =2,\
+                           command = self.pressed )
+            self.but.grid(row = row, column = drawCol, padx=1,pady=1)
+        else:
+            self.but =[]
+            
         #initialize the adjacency dictionary
         self.adjDict={}
         self.targeter = {}
@@ -68,7 +72,8 @@ class Hole:
 
     def draw( self ):
         """ change the color of the hole to match its state """
-        self.but['bg'] = self.stateMap[self.state]
+        if self.state != 'none':
+            self.but['bg'] = self.stateMap[self.state]
  
     def getTargets(self):
         """Called when the button is pressed.  creates a dictionary with real

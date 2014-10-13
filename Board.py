@@ -139,6 +139,31 @@ class Board:
     ## shapes (called from __init__())   
     def cross(self):
         """sets up or resets a cross-shaped board"""
+        # I've been trying to specify a nice cross shape formula.
+        # For now punt to 3x3 center and 3x2 arms.  The center peg is empty.
+        size = self.size = 7
+        self.holes.clear()
+        self.holes=[]
+        numHoles = size*size
+
+        def between(l,x,h): # is there a better way to define this?
+            return (l<=x) and (x<=h)
+        
+        for r in range(size):
+            for c in range(size):
+                if r == 3 and c == 3 :
+                    s= 'empty'
+                elif between(2,r,4) or between(2,c,4):
+                    s = 'full'
+                else :
+                    s = 'none' #the corners
+                h = Hole(self, self.parent.tk, row=r,col=c, drawCol=c,\
+                         but=[], state=s,index = len(self.holes))
+                self.holes.append(h)
+        self.maxDrawCol = size
+        self.gString = '{0}x{1}'.format(2*size*self.boxSize,\
+                            2*size*self.boxSize)
+        self.countPegs()
         pass
 
     def triangle( self ):
