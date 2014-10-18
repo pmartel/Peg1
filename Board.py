@@ -164,7 +164,49 @@ class Board:
         self.gString = '{0}x{1}'.format(2*size*self.boxSize,\
                             2*size*self.boxSize)
         self.countPegs()
-        pass
+        # adjMat will be a 2D map with hole numbers at the corresponding
+        # position
+        self.adjMat = TwoD(self.size,self.size)
+        h = self.holes
+        for i in range(len(h)):
+            r0 = h[i].row
+            c0 = h[i].col
+            self.adjMat.set(r0,c0,i)
+##        self.adjMat.display()
+
+        # for the triangular board adjacenct (and jumpTo) is along 3 lines:
+        # 1. n-s.  Row +/-1, same Col
+        # 2. e-w. Col +/- 1, same Row
+            
+        for j in range(len(h)):
+            r = h[j].row
+            c = h[j].col
+            #line 1
+            a1 = self.adjMat.get(r+1,c)
+            if a1 != None:
+                j1 = self.adjMat.get(r+2,c)
+                if j1 != None:
+                    h[j].addA(a1,j1)
+                    
+            a2 = self.adjMat.get(r-1,c)
+            if a2 != None:
+                j2 = self.adjMat.get(r-2,c)
+                if j2 != None:
+                    h[j].addA(a2,j2)
+            
+            #line 2
+            a1 = self.adjMat.get(r,c+1)
+            if a1 != None:
+                j1 = self.adjMat.get(r,c+2)
+                if j1 != None:
+                    h[j].addA(a1,j1)
+                    
+            a2 = self.adjMat.get(r,c-1)
+            if a2 != None:
+                j2 = self.adjMat.get(r,c-2)
+                if j2 != None:
+                    h[j].addA(a2,j2)
+
 
     def triangle( self ):
         """sets up or resets a triangular board"""
